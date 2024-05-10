@@ -12,8 +12,8 @@ interface GetRealEstateListQueryParams {
 export const getRealEstateList = async (req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>, res: express.Response) => {
     try {
       const { page, limit, filter } = req.query;
-
-        const realEstateList = await getRealEstates(page, limit, filter);
+        
+        const realEstateList = await getRealEstates(page, 25, filter);
         if (!realEstateList) {
             return res.status(404).send("realEstateList not found");
           }

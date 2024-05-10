@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
-function Filter({handleSetData}) {
+function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
   // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
   const [filterOptions, setFilterOptions] = useState({
     city: "",
@@ -31,9 +31,13 @@ function Filter({handleSetData}) {
     // Puoi fare qualcosa con le opzioni di filtro qui, ad esempio inviarle al backend per ottenere i risultati corrispondenti
     // TODO: Api call to fetch data
     // make axios api request
-    handleSetData(await getRealEstateDataAPI());
+    handleSearchIcon(true);
+    // return;
+    // const data = await getRealEstateDataAPI(page);
+    // handleSetData(data?.data);
+    // handleSetTotalPages(data?.total);
 
-    console.log(filterOptions);
+    // console.log(filterOptions);
   };
 
   return (
