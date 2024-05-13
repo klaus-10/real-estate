@@ -19,17 +19,23 @@ function Card({ item }) {
           <img src="/pin.png" alt="" />
           <span>{item.realEstate?.properties[0].location.city} - {item.realEstate?.properties[0].location.macrozone}</span>
         </p>
-        <p className="price">$ {item.price}</p>
+        <p className="price">$ {item?.realEstate?.price?.formattedValue}</p>
         <div className="bottom">
           <div className="features">
             <div className="feature">
               <img src="/bed.png" alt="" />
-              <span>{item.bedroom} bedroom</span>
+              <span>{item.realEstate?.properties[0]?.bedRoomsNumber} bedroom</span>
             </div>
             <div className="feature">
               <img src="/bath.png" alt="" />
-              <span>{item.bathroom} bathroom</span>
+              <span>{item.realEstate?.properties[0]?.bathrooms} bathroom</span>
             </div>
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>{item.realEstate?.properties[0]?.rooms} rooms</span>
+            </div>
+
+            
           </div>
           <div className="icons">
             <div className="icon">

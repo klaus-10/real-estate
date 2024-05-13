@@ -5,7 +5,7 @@ import CurrentLocation from "../current-location/CurrentLocation";
 import Pin from "../pin/Pin";
 import { useState } from "react";
 
-function Map({ items }) {
+function Map({ items, centerFromParent }) { // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
 
@@ -14,7 +14,7 @@ function Map({ items }) {
     <MapContainer
       center={center}
       zoom={15}
-      scrollWheelZoom={true}
+      scrollWheelZoom={false}
       // scrollWheelZoom={false}
       className="map"
     >
@@ -22,10 +22,13 @@ function Map({ items }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      {/* // map all the pins here */}
       {items.map((item) => (
-        <Pin item={item} key={item.id} />
+        <Pin item={item} key={item.idGeoHash} />
       ))}
 
+      {/* // retrive current location for query? */}
       <div className="current_location_map">
         <CurrentLocation setLocation={setLocation} />
       </div>

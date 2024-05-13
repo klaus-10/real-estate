@@ -174,13 +174,13 @@ export const RealEstateModel = mongoose.model("RealEstate", realEstateSchema);
 // export const getRealEstates = (page: number, limit: number, filter?: any) => RealEstateModel.find().skip(25 * page).limit(25);
 
 export const getRealEstates = async (page: number, limit: number, filter?: any) => {
-    const totalCount = await RealEstateModel.countDocuments();
+    const totalCount = await RealEstateModel.count();
     const realEstates = await RealEstateModel.find()
         .skip(limit * (page - 1))
         .limit(limit);
 
     return {
-        total: totalCount,
+        total: totalCount/25,
         data: realEstates
     };
 };
