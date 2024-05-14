@@ -1,7 +1,7 @@
 export interface BoundingBoxRequest {
-    west: numeric;
-    east: numeric;
-    north: numeric;
-    south: numeric;
+    west: number;
+    east: number;
+    north: number;
+    south: number;
   }
   

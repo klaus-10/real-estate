@@ -28,13 +28,21 @@ export const getRealEstateList = async (req: express.Request<{}, {}, {}, GetReal
 }
 
 export const getRealEstatesFromBoundingBoxList = async (
-    req: Request<BoundingBoxRequest, {}, {}, {}, GetRealEstateListQueryParams>,
-    res: Response
+    req: express.Request<{}, {}, BoundingBoxRequest, GetRealEstateListQueryParams>,
+    res: express.Response
   ) => {
     try {
       const { page, limit, filter } = req.query;
-      const { boundingBox } = req.body;
+      // const { west, east, north, south } = req.body;
+      const boundingBox = req.body;
+
+      // console.log("boundingBox: ",boundingBox);
+
       const realEstateList = await getRealEstatesFromBoundingBox(boundingBox, page, 25, filter);
+
+      // console.log("geoData: ", realEstateList.geodata);
+
+      console.log("realEstateList: ", realEstateList.realEstateList);
 
       if (!realEstateList) {
         return res.status(404).send("realEstateList not found");

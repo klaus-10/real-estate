@@ -4,10 +4,18 @@ import "leaflet/dist/leaflet.css";
 import CurrentLocation from "../current-location/CurrentLocation";
 import Pin from "../pin/Pin";
 import { useState } from "react";
+import MapBoundingBox from "./map-components/BoundingBox";
 
 function Map({ items, centerFromParent }) { // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
+
+  const [boundingBox, setBoundingBox] = useState(null);
+
+  const handleBoundingBoxChange = (newBoundingBox) => {
+    setBoundingBox(newBoundingBox);
+    console.log("boundingBox: ", boundingBox);
+  };
 
   // TODO: add current location position
   return (
@@ -15,7 +23,6 @@ function Map({ items, centerFromParent }) { // center position on text label cha
       center={center}
       zoom={15}
       scrollWheelZoom={false}
-      // scrollWheelZoom={false}
       className="map"
     >
       <TileLayer
@@ -32,6 +39,9 @@ function Map({ items, centerFromParent }) { // center position on text label cha
       <div className="current_location_map">
         <CurrentLocation setLocation={setLocation} />
       </div>
+
+      {/* Include MapBoundingBox component to retrieve bounding box */}
+      <MapBoundingBox onBoundingBoxChange={handleBoundingBoxChange} />
     </MapContainer>
   );
 }

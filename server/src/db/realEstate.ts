@@ -188,10 +188,12 @@ export const getRealEstates = async (page: number, limit: number, filter?: any) 
 
 export const getRealEstatesFromBoundingBox = async(
     boundingBox: BoundingBoxRequest,
-    page: number, limit: number, filter?: any
+    page: number, 
+    limit: number, 
+    filter?: any
 ) => {
     const query = {
-        loc: {
+        "realEstate.loc": {
           $geoWithin: {
             $geometry: {
               type: 'Polygon',
@@ -207,10 +209,111 @@ export const getRealEstatesFromBoundingBox = async(
         },
       };
 
-      const geodata = await RealEstateModel
+      const projection = [
+        {
+          $project: {
+            "realEstate.loc": 1,
+            "realEstate.properties": { $slice: ["$realEstate.properties", 1] },
+            "seo.url": 1,
+            "seo.title": 1,
+            "realEstate.price.formattedValue": 1,
+          },
+        },
+      ];
+
+
+    const geodata = await RealEstateModel
         .find(query)
         .skip(limit * (page - 1))
         .limit(limit);
+
+    const realEstateList = await RealEstateModel
+    .aggregate([
+      { $match: query },
+      ...projection,
+    //   { $skip: limit * (page - 1) },
+    //   { $limit: limit }
+    ]);
       return geodata;
+}
+
+export const getAllRealEstatesLocationFromBoundingBox = async(
+    boundingBox: BoundingBoxRequest,
+    page: number, 
+    limit: number, 
+    filter?: any
+) => {
+
+    const query = {
+        "realEstate.loc": {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [[
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ]],
+            },
+          },
+        },
+      };
+
+      const projection = [
+        {
+          $project: {
+            "realEstate.loc": 1,
+          },
+        },
+      ];
+
+      return await RealEstateModel
+      .aggregate([
+        { $match: query },
+        ...projection,
+      ]);
+
+}
+
+export const getAllRealEstatesLocationByLocationName = async(
+    locationName: string,
+    page: number, 
+    limit: number, 
+    filter?: any
+) => {
+
+    const query = {
+        "realEstate.loc": {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [[
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ]],
+            },
+          },
+        },
+      };
+
+      const projection = [
+        {
+          $project: {
+            "realEstate.loc": 1,
+          },
+        },
+      ];
+
+      return await RealEstateModel
+      .aggregate([
+        { $match: query },
+        ...projection,
+      ]);
+
 }
 
