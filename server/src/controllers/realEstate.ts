@@ -42,8 +42,6 @@ export const getRealEstatesFromBoundingBoxList = async (
 
       // console.log("geoData: ", realEstateList.geodata);
 
-      console.log("realEstateList: ", realEstateList.realEstateList);
-
       if (!realEstateList) {
         return res.status(404).send("realEstateList not found");
       }

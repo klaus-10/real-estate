@@ -227,13 +227,6 @@ export const getRealEstatesFromBoundingBox = async(
         .skip(limit * (page - 1))
         .limit(limit);
 
-    const realEstateList = await RealEstateModel
-    .aggregate([
-      { $match: query },
-      ...projection,
-    //   { $skip: limit * (page - 1) },
-    //   { $limit: limit }
-    ]);
       return geodata;
 }
 
@@ -284,36 +277,15 @@ export const getAllRealEstatesLocationByLocationName = async(
     filter?: any
 ) => {
 
-    const query = {
-        "realEstate.loc": {
-          $geoWithin: {
-            $geometry: {
-              type: 'Polygon',
-              coordinates: [[
-                [boundingBox.west, boundingBox.south],
-                [boundingBox.east, boundingBox.south],
-                [boundingBox.east, boundingBox.north],
-                [boundingBox.west, boundingBox.north],
-                [boundingBox.west, boundingBox.south],
-              ]],
-            },
-          },
-        },
-      };
 
-      const projection = [
-        {
-          $project: {
-            "realEstate.loc": 1,
-          },
-        },
-      ];
-
-      return await RealEstateModel
-      .aggregate([
-        { $match: query },
-        ...projection,
-      ]);
-
+    return RealEstateModel.find({
+        $or: [
+          { "realEstate.location.city": locationName },
+          { "realEstate.location.region": locationName },
+          { "realEstate.location.province": locationName },
+        ]
+      })
+      .skip(limit * (page - 1))
+      .limit(limit);
 }
 
