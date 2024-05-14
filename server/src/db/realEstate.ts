@@ -1,4 +1,5 @@
 import { RealEstate, PhoneNumber, ImageUrls, MultimediaPhoto, Agency, Supervisor, Advertiser, Price, Multimedia, Typology, Location, Feature, Property } from "interfaces/db/realEstate";
+import { BoundingBoxRequest } from "interfaces/request";
 import mongoose, { Schema } from "mongoose";
 
 const phoneNumberSchema = new Schema<PhoneNumber>({
@@ -184,3 +185,32 @@ export const getRealEstates = async (page: number, limit: number, filter?: any) 
         data: realEstates
     };
 };
+
+export const getRealEstatesFromBoundingBox = async(
+    boundingBox: BoundingBoxRequest,
+    page: number, limit: number, filter?: any
+) => {
+    const query = {
+        loc: {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [[
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ]],
+            },
+          },
+        },
+      };
+
+      const geodata = await RealEstateModel
+        .find(query)
+        .skip(limit * (page - 1))
+        .limit(limit);
+      return geodata;
+}
+
