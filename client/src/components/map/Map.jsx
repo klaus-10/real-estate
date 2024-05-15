@@ -5,8 +5,9 @@ import CurrentLocation from "../current-location/CurrentLocation";
 import Pin from "../pin/Pin";
 import { useState } from "react";
 import MapBoundingBox from "./map-components/BoundingBox";
+import SearchInMap from "./map-components/SearchInMap";
 
-function Map({ items, centerFromParent }) { // center position on text label change
+function Map({ items, centerFromParent, handleIsMapSearch }) { // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
 
@@ -42,6 +43,10 @@ function Map({ items, centerFromParent }) { // center position on text label cha
 
       {/* Include MapBoundingBox component to retrieve bounding box */}
       <MapBoundingBox onBoundingBoxChange={handleBoundingBoxChange} />
+
+      {/* Button to enable the map search */}
+      {/* TODO: set isVisible */}
+      <SearchInMap isVisible={true} handleIsMapSearch={handleIsMapSearch}/>
     </MapContainer>
   );
 }

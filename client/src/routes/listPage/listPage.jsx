@@ -3,7 +3,7 @@ import Card from "../../components/card/Card";
 import Filter from "../../components/filter/Filter";
 import Page from "../../components/page/Page";
 import { listData } from "../../lib/dummydata";
-import { getRealEstateDataAPI } from "../../utils/searchAPI";
+import { getRealEstateDataAPI, getRealEstatesFromBoundingBoxListAPI } from "../../utils/searchAPI";
 import {
   scrollToToTopWithElemRef
 } from "../../utils/utils";
@@ -12,6 +12,8 @@ import Map from "../../components/map/Map";
 
 function ListPage() {
   const wrapperRef = useRef(null);
+  const [isMapSearch, SetIsMapSearch] = useState(false);
+
   const [data, setData] = useState(listData);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -34,15 +36,21 @@ function ListPage() {
     setSearchIcon(searchIconStatus);
   };
 
-  useEffect(() => {
-    console.log("data: ", data);
-  }, [data]);
+  const handleIsMapSearch = (isMapSearch) => {
+    SetIsMapSearch(isMapSearch);
+  };
+
+  // useEffect(() => {
+  //   console.log("data: ", data);
+  // }, [data]);
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("pageNum INT");
       if (searchIcon) {
+        // todo: replace this call with more selected query based on city/region/quarter
         await fetchRealEstateData();
+        // todo: set search on map to FALSE
+        // todo: add an event listener for on click outside the map ?
       }
       setSearchIcon(false);
     };
@@ -51,13 +59,20 @@ function ListPage() {
   }, [searchIcon]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log("pageNum INT2");
+    // todo: refract this use effect baseod on isMapSearch param
+
+    const fetchDataFromSearchBar = async () => {
       await fetchRealEstateData();
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
-    fetchData();
+    const fetchDataFromMap = async () => {
+      await fetchRealEstateDataByBoundaryBox();
+      // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
+    };
+
+    if(isMapSearch) fetchDataFromSearchBar();
+    else fetchDataFromMap();
   }, [page]);
 
   const fetchRealEstateData = async () => {
@@ -73,6 +88,23 @@ function ListPage() {
       console.error("Errore durante il recupero dei dati:", error);
     }
   };
+
+  const fetchRealEstateDataByBoundaryBox = async () => {
+    try {
+      console.log("Wrapper ref: ", wrapperRef.current);
+      const repsonse = await getRealEstatesFromBoundingBoxListAPI(page);
+      console.log("repsonse: ", repsonse);
+      handleSetData(repsonse?.data);
+      handleSetTotalPages(repsonse?.total);
+      scrollToToTopWithElemRef(wrapperRef);
+    } catch (error) {
+      // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
+      console.error("Errore durante il recupero dei dati:", error);
+    }
+  }
+
+
+  // todo: add api call to show all realEstates points of the current view to see on the map as circle point
 
   return (
     <div className="listPage">
@@ -101,7 +133,7 @@ function ListPage() {
           </div>
         </div>
       </div>
-      <div className="mapContainer"><Map items={data}/></div>
+      <div className="mapContainer"><Map items={data} handleIsMapSearch={handleIsMapSearch}/></div>
     </div>
   );
 }

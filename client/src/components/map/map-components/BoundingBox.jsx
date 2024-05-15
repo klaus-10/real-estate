@@ -21,11 +21,14 @@ const MapBoundingBox = ({ onBoundingBoxChange }) => {
       onBoundingBoxChange(boundingBox);
     };
 
-    map.on('zoomend', handleMoveEnd);
+    // Listen for both 'moveend' and 'zoomend' events
+    map.on('moveend', handleMapChange);
+    map.on('zoomend', handleMapChange); // Already included for completeness
 
     // Cleanup function
     return () => {
-      map.off('zoomend', handleMoveEnd);
+      map.off('moveend', handleMapChange);
+      map.off('zoomend', handleMapChange);
     };
   }, [map, onBoundingBoxChange]);
 
