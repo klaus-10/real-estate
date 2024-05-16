@@ -1,4 +1,5 @@
 import { RealEstate, PhoneNumber, ImageUrls, MultimediaPhoto, Agency, Supervisor, Advertiser, Price, Multimedia, Typology, Location, Feature, Property } from "interfaces/db/realEstate";
+import { BoundingBoxRequest } from "interfaces/request";
 import mongoose, { Schema } from "mongoose";
 
 const phoneNumberSchema = new Schema<PhoneNumber>({
@@ -184,3 +185,107 @@ export const getRealEstates = async (page: number, limit: number, filter?: any) 
         data: realEstates
     };
 };
+
+export const getRealEstatesFromBoundingBox = async(
+    boundingBox: BoundingBoxRequest,
+    page: number, 
+    limit: number, 
+    filter?: any
+) => {
+    const query = {
+        "realEstate.loc": {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [[
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ]],
+            },
+          },
+        },
+      };
+
+      const projection = [
+        {
+          $project: {
+            "realEstate.loc": 1,
+            "realEstate.properties": { $slice: ["$realEstate.properties", 1] },
+            "seo.url": 1,
+            "seo.title": 1,
+            "realEstate.price.formattedValue": 1,
+          },
+        },
+      ];
+
+
+    const geodata = await RealEstateModel
+        .find(query)
+        .skip(limit * (page - 1))
+        .limit(limit);
+
+      return geodata;
+}
+
+export const getAllRealEstatesLocationFromBoundingBox = async(
+    boundingBox: BoundingBoxRequest,
+    page: number, 
+    limit: number, 
+    filter?: any
+) => {
+
+    const query = {
+        "realEstate.loc": {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [[
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ]],
+            },
+          },
+        },
+      };
+
+      const projection = [
+        {
+          $project: {
+            "realEstate.loc": 1,
+          },
+        },
+      ];
+
+      return await RealEstateModel
+      .aggregate([
+        { $match: query },
+        ...projection,
+      ]);
+
+}
+
+export const getAllRealEstatesLocationByLocationName = async(
+    locationName: string,
+    page: number, 
+    limit: number, 
+    filter?: any
+) => {
+
+
+    return RealEstateModel.find({
+        $or: [
+          { "realEstate.location.city": locationName },
+          { "realEstate.location.region": locationName },
+          { "realEstate.location.province": locationName },
+        ]
+      })
+      .skip(limit * (page - 1))
+      .limit(limit);
+}
+

@@ -75,7 +75,8 @@ for page in range(1, 15):
 
         for res in results:
             # print(res)
-            res["realEstate"]["loc"] = { "type": "Point", "coordinates":[res["realEstate"]["properties"][0]["location"]["latitude"], res["realEstate"]["properties"][0]["location"]["longitude"]]}
+            res["realEstate"]["loc"] = { "type": "Point", "coordinates":[res["realEstate"]["properties"][0]["location"]["longitude"], res["realEstate"]["properties"][0]["location"]["latitude"]]}
+            res["realEstate"]["location"] = res["realEstate"]["properties"][0]["location"];
             
             try:
                 if len(res["realEstate"]["properties"]) != 0 and res["realEstate"]["properties"][0] is not None and res["realEstate"]["properties"][0]["surface"] is not None:
