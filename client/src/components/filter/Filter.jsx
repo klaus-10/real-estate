@@ -2,17 +2,14 @@ import React, { useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
-function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
-  // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
-  const [filterOptions, setFilterOptions] = useState({
-    city: "",
-    type: "",
-    property: "",
-    minPrice: "",
-    maxPrice: "",
-    bedroom: "",
-  });
-
+function Filter({
+  handleSetData,
+  page,
+  handleSetTotalPages,
+  handleSearchIcon,
+  filterOptions,
+  setFilterOptions,
+}) {
   // Funzione per gestire i cambiamenti nelle opzioni di filtro
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

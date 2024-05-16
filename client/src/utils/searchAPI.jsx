@@ -82,6 +82,7 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
 };
 
 export const getAllRealEstatesLocationByLocationNameListAPI = async (
+  locationName,
   page,
   west,
   east,
@@ -93,7 +94,7 @@ export const getAllRealEstatesLocationByLocationNameListAPI = async (
       "url: ",
       "http://localhost:8080/real-estate/locationsByName",
       " params: ",
-      { page: page, locationsByName: locationsByName }
+      { page: page, locationName: locationName }
     );
     const response = await axios.get(
       "http://localhost:8080/real-estate/locationsByName",
