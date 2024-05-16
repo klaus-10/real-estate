@@ -19,9 +19,6 @@ function ListPage() {
 
   const [data, setData] = useState(listData);
   const [allRealStatesData, setAllRealStatesData] = useState([]);
-  useEffect(() => {
-    console.log("allRealStatesData: ", allRealStatesData);
-  });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
@@ -39,9 +36,9 @@ function ListPage() {
   // leaflet bounding box coordinates
   const [boundingBox, setBoundingBox] = useState(null);
 
-  useEffect(() => {
-    console.log("boundingBox: ", boundingBox);
-  });
+  // useEffect(() => {
+  //   console.log("boundingBox: ", boundingBox);
+  // });
 
   const handleSetData = (newData) => {
     setData(newData);
@@ -87,6 +84,7 @@ function ListPage() {
         // todo: add an event listener for on click outside the map ?
       }
       setSearchIcon(false);
+      setIsMapSearch(false);
     };
 
     fetchData();

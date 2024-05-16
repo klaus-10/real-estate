@@ -56,7 +56,10 @@ function Map({
 
       {/* Button to enable the map search */}
       {/* TODO: set isVisible */}
-      <SearchInMap isVisible={true} handleIsMapSearch={handleIsMapSearch} />
+      <SearchInMap
+        isVisible={isMapSearch}
+        handleIsMapSearch={handleIsMapSearch}
+      />
     </MapContainer>
   );
 }
