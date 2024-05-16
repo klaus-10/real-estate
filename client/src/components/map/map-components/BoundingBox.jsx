@@ -1,10 +1,11 @@
-import { useMap } from 'react-leaflet';
-import { useEffect } from 'react';
+import { useMap } from "react-leaflet";
+import { useEffect } from "react";
 
-const MapBoundingBox = ({ onBoundingBoxChange }) => {
+const MapBoundingBox = ({ onBoundingBoxChange, isMapSearch }) => {
   const map = useMap();
 
   useEffect(() => {
+    if (!isMapSearch) return;
     const handleMoveEnd = () => {
       const mapBounds = map.getBounds();
       const northwest = mapBounds.getNorthWest();
@@ -22,15 +23,15 @@ const MapBoundingBox = ({ onBoundingBoxChange }) => {
     };
 
     // Listen for both 'moveend' and 'zoomend' events
-    map.on('moveend', handleMapChange);
-    map.on('zoomend', handleMapChange); // Already included for completeness
+    map.on("moveend", onBoundingBoxChange);
+    map.on("zoomend", onBoundingBoxChange); // Already included for completeness
 
     // Cleanup function
     return () => {
-      map.off('moveend', handleMapChange);
-      map.off('zoomend', handleMapChange);
+      map.off("moveend", onBoundingBoxChange);
+      map.off("zoomend", onBoundingBoxChange);
     };
-  }, [map, onBoundingBoxChange]);
+  }, [map]);
 
   // This component doesn't render anything directly
   return null;

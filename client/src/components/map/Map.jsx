@@ -3,11 +3,12 @@ import "./map.scss";
 import "leaflet/dist/leaflet.css";
 import CurrentLocation from "../current-location/CurrentLocation";
 import Pin from "../pin/Pin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MapBoundingBox from "./map-components/BoundingBox";
 import SearchInMap from "./map-components/SearchInMap";
 
-function Map({ items, centerFromParent, handleIsMapSearch }) { // center position on text label change
+function Map({ items, centerFromParent, handleIsMapSearch, isMapSearch }) {
+  // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
 
@@ -17,6 +18,10 @@ function Map({ items, centerFromParent, handleIsMapSearch }) { // center positio
     setBoundingBox(newBoundingBox);
     console.log("boundingBox: ", boundingBox);
   };
+
+  useEffect(() => {
+    console.log("items: ", items);
+  });
 
   // TODO: add current location position
   return (
@@ -32,9 +37,7 @@ function Map({ items, centerFromParent, handleIsMapSearch }) { // center positio
       />
 
       {/* // map all the pins here */}
-      {items.map((item) => (
-        <Pin item={item} key={item.idGeoHash} />
-      ))}
+      {items && items.map((item) => <Pin item={item} key={item._id} />)}
 
       {/* // retrive current location for query? */}
       <div className="current_location_map">
@@ -46,7 +49,7 @@ function Map({ items, centerFromParent, handleIsMapSearch }) { // center positio
 
       {/* Button to enable the map search */}
       {/* TODO: set isVisible */}
-      <SearchInMap isVisible={true} handleIsMapSearch={handleIsMapSearch}/>
+      <SearchInMap isVisible={true} handleIsMapSearch={handleIsMapSearch} />
     </MapContainer>
   );
 }

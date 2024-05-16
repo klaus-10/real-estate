@@ -3,16 +3,17 @@ import Card from "../../components/card/Card";
 import Filter from "../../components/filter/Filter";
 import Page from "../../components/page/Page";
 import { listData } from "../../lib/dummydata";
-import { getRealEstateDataAPI, getRealEstatesFromBoundingBoxListAPI } from "../../utils/searchAPI";
 import {
-  scrollToToTopWithElemRef
-} from "../../utils/utils";
+  getRealEstateDataAPI,
+  getRealEstatesFromBoundingBoxListAPI,
+} from "../../utils/searchAPI";
+import { scrollToToTopWithElemRef } from "../../utils/utils";
 import "./listPage.scss";
 import Map from "../../components/map/Map";
 
 function ListPage() {
   const wrapperRef = useRef(null);
-  const [isMapSearch, SetIsMapSearch] = useState(false);
+  const [isMapSearch, setIsMapSearch] = useState(false);
 
   const [data, setData] = useState(listData);
   const [page, setPage] = useState(1);
@@ -37,12 +38,17 @@ function ListPage() {
   };
 
   const handleIsMapSearch = (isMapSearch) => {
-    SetIsMapSearch(isMapSearch);
+    setIsMapSearch(isMapSearch);
   };
 
-  // useEffect(() => {
-  //   console.log("data: ", data);
-  // }, [data]);
+  useEffect(() => {
+    console.log("data: ", data);
+
+    console.log("isMapSearch: ", isMapSearch);
+    console.log("searchIcon: ", searchIcon);
+    console.log("page: ", page);
+    console.log("totalPages: ", totalPages);
+  }, [searchIcon]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,13 +77,13 @@ function ListPage() {
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
-    if(isMapSearch) fetchDataFromSearchBar();
+    if (!isMapSearch) fetchDataFromSearchBar();
     else fetchDataFromMap();
   }, [page]);
 
   const fetchRealEstateData = async () => {
     try {
-      console.log("Wrapper ref: ", wrapperRef.current);
+      console.log("Normal Data");
       const repsonse = await getRealEstateDataAPI(page);
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
@@ -91,7 +97,7 @@ function ListPage() {
 
   const fetchRealEstateDataByBoundaryBox = async () => {
     try {
-      console.log("Wrapper ref: ", wrapperRef.current);
+      console.log("BoundaryBox Data");
       const repsonse = await getRealEstatesFromBoundingBoxListAPI(page);
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
@@ -101,8 +107,7 @@ function ListPage() {
       // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
       console.error("Errore durante il recupero dei dati:", error);
     }
-  }
-
+  };
 
   // todo: add api call to show all realEstates points of the current view to see on the map as circle point
 
@@ -112,9 +117,9 @@ function ListPage() {
         <div
           className="wrapper"
           ref={wrapperRef}
-          onScroll={(event) =>
-            console.log("scrolled: ", event.target.scrollTop)
-          }
+          // onScroll={(event) =>
+          //   console.log("scrolled: ", event.target.scrollTop)
+          // }
         >
           <Filter
             handleSearchIcon={handleSearchIcon}
@@ -133,7 +138,13 @@ function ListPage() {
           </div>
         </div>
       </div>
-      <div className="mapContainer"><Map items={data} handleIsMapSearch={handleIsMapSearch}/></div>
+      <div className="mapContainer">
+        <Map
+          items={data}
+          handleIsMapSearch={handleIsMapSearch}
+          isMapSearch={isMapSearch}
+        />
+      </div>
     </div>
   );
 }
