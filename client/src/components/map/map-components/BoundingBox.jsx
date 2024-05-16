@@ -22,6 +22,9 @@ const MapBoundingBox = ({ onBoundingBoxChange, isMapSearch }) => {
       onBoundingBoxChange(boundingBox);
     };
 
+    // Trigger handleMoveEnd when the map is ready (on load)
+    map.whenReady(handleMoveEnd);
+
     // Listen for both 'moveend' and 'zoomend' events
     map.on("moveend", handleMoveEnd);
     map.on("zoomend", handleMoveEnd); // Already included for completeness
