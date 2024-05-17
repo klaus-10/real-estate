@@ -282,6 +282,43 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
   return await RealEstateModel.aggregate([{ $match: query }, ...projection]);
 };
 
+// export const getAllRealEstatesByLocationName = async (
+//   locationName: string,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const totalCount = await RealEstateModel.find({
+//     "realEstate.location.properties.0": {
+//       $elemMatch: {
+//         $or: [
+//           { "location.city": locationName },
+//           { "location.region": locationName },
+//           { "location.province": locationName },
+//         ],
+//       },
+//     },
+//   }).count();
+//   const realEstates = await RealEstateModel.find({
+//     "realEstate.location.properties.0": {
+//       $elemMatch: {
+//         $or: [
+//           { "location.city": locationName },
+//           { "location.region": locationName },
+//           { "location.province": locationName },
+//         ],
+//       },
+//     },
+//   })
+//     .skip(limit * (page - 1))
+//     .limit(limit);
+
+//   return {
+//     total: totalCount,
+//     data: realEstates,
+//   };
+// };
+
 export const getAllRealEstatesLocationByLocationName = async (
   locationName: string,
   page: number,
@@ -290,12 +327,71 @@ export const getAllRealEstatesLocationByLocationName = async (
 ) => {
   return RealEstateModel.find(
     {
-      $or: [
-        { "realEstate.location.city": locationName },
-        { "realEstate.location.region": locationName },
-        { "realEstate.location.province": locationName },
-      ],
+      "realEstate.location.properties.0": {
+        $elemMatch: {
+          $or: [
+            { "location.city": locationName },
+            { "location.region": locationName },
+            { "location.province": locationName },
+          ],
+        },
+      },
     },
-    { "realEstate.loc": 1 }
+    { "realEstate.loc": 1, _id: 0 }
   ); // Projection to include only the loc field
 };
+
+export const getAllRealEstatesByLocationName = async (
+  locationName: string,
+  page: number,
+  limit: number,
+  filter?: any
+) => {
+  const testQuery = await RealEstateModel.find({
+    $or: [
+      { "realEstate.properties.0.location.city": locationName },
+      { "realEstate.properties.0.location.region": locationName },
+      { "realEstate.properties.0.location.province": locationName },
+    ],
+  });
+
+  console.log(testQuery);
+};
+
+// export const getAllRealEstatesByLocationName = async (
+//   locationName: string,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const matchStage = {
+//     $match: {
+//       $or: [
+//         { "realEstate.location.properties.0.location.city": locationName },
+//         { "realEstate.location.properties.0.location.region": locationName },
+//         { "realEstate.location.properties.0.location.province": locationName },
+//       ],
+//     },
+//   };
+
+//   const facetStage = {
+//     $facet: {
+//       totalCount: [{ $count: "count" }],
+//       realEstates: [{ $skip: limit * (page - 1) }, { $limit: limit }],
+//     },
+//   };
+
+//   const pipeline = [matchStage, facetStage];
+
+//   const result = await RealEstateModel.aggregate(pipeline).exec();
+
+//   const totalCount = result[0].totalCount[0]
+//     ? result[0].totalCount[0].count
+//     : 0;
+//   const realEstates = result[0].realEstates;
+
+//   return {
+//     total: totalCount,
+//     data: realEstates,
+//   };
+// };

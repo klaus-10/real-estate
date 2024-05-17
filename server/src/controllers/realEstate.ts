@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  getAllRealEstatesByLocationName,
   getAllRealEstatesLocationByLocationName,
   getAllRealEstatesLocationFromBoundingBox,
   getRealEstates,
@@ -93,6 +94,35 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
     );
 
     // console.log("geoData: ", realEstateList.geodata);
+
+    if (!realEstateList) {
+      return res.status(404).send("realEstateList not found");
+    }
+    return res.status(200).send(realEstateList);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const getAllRealEstatesByLocationNameList = async (
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  res: express.Response
+) => {
+  try {
+    const { locationName, page, limit, filter } = req.query;
+    // const { west, east, north, south } = req.body;
+
+    console.log("reury params: ", locationName, page, limit, filter);
+
+    const realEstateList = await getAllRealEstatesByLocationName(
+      locationName,
+      page,
+      25,
+      filter
+    );
+
+    console.log("realEstateList: ", realEstateList.total);
 
     if (!realEstateList) {
       return res.status(404).send("realEstateList not found");

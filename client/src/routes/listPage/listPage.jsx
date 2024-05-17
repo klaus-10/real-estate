@@ -36,9 +36,9 @@ function ListPage() {
   // leaflet bounding box coordinates
   const [boundingBox, setBoundingBox] = useState(null);
 
-  // useEffect(() => {
-  //   console.log("boundingBox: ", boundingBox);
-  // });
+  useEffect(() => {
+    console.log("data: ", data);
+  });
 
   const handleSetData = (newData) => {
     setData(newData);

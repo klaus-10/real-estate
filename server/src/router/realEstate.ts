@@ -1,12 +1,12 @@
 import express from "express";
 
 import {
+  getAllRealEstatesByLocationNameList,
   getAllRealEstatesLocationByLocationNameList,
   getAllRealEstatesLocationFromBoundingBoxList,
   getRealEstateList,
   getRealEstatesFromBoundingBoxList,
 } from "../controllers/realEstate";
-import { getAllRealEstatesLocationFromBoundingBox } from "db/realEstate";
 
 export default (router: express.Router) => {
   // #swagger.tags = ['RealEstate']
@@ -20,4 +20,5 @@ export default (router: express.Router) => {
     "/real-estate/locationsByName",
     getAllRealEstatesLocationByLocationNameList
   );
+  router.get("/real-estate/byName", getAllRealEstatesByLocationNameList);
 };

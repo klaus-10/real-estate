@@ -23,8 +23,16 @@ function Map({
 
   const handleBoundingBoxChange = (newBoundingBox) => {
     setBoundingBox(newBoundingBox);
-    // console.log("boundingBox: ", boundingBox);
   };
+
+  useEffect(() => {
+    console.log(
+      "real-estate base: ",
+      items && items.length,
+      " real-estate total: ",
+      allRealStatesData && allRealStatesData.length
+    );
+  });
 
   // TODO: add current location position
   return (
