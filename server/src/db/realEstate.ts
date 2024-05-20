@@ -219,8 +219,7 @@ export const getRealEstatesFromBoundingBox = async (
   limit: number,
   filter?: any
 ) => {
-  const uri = "mongodb://user:password@localhost:27017/";
-  const client = new MongoClient(uri);
+  const client = new MongoClient(process.env.MONGOURI);
 
   try {
     await client.connect();
@@ -286,8 +285,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
   limit: number,
   filter?: any
 ) => {
-  const uri = "mongodb://user:password@localhost:27017/";
-  const client = new MongoClient(uri);
+  const client = new MongoClient(process.env.MONGOURI);
 
   try {
     await client.connect();
@@ -351,8 +349,7 @@ export const getAllRealEstatesLocationByLocationName = async (
   limit: number,
   filter?: any
 ) => {
-  const uri = "mongodb://user:password@localhost:27017/";
-  const client = new MongoClient(uri);
+  const client = new MongoClient(process.env.MONGOURI);
 
   try {
     await client.connect();
@@ -401,8 +398,7 @@ export const getAllRealEstatesByLocationName = async (
   limit: number,
   filter?: any
 ) => {
-  const uri = "mongodb://user:password@localhost:27017/";
-  const client = new MongoClient(uri);
+  const client = new MongoClient(process.env.MONGOURI);
 
   try {
     await client.connect();
