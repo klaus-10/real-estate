@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm run generate-swagger",
-    "generate-swagger": "del .\\src\\docs\\swagger_output.json && ts-node .\\src\\docs\\swagger.ts",
-
+    "generate-swagger": "rm ./src/docs/swagger_output.json && ts-node ./src/docs/swagger.ts",
     "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run generate-swagger && tsc && cp ./src/docs/swagger_output.json ./dist/docs/"
@@ -41,6 +40,7 @@
     "keyv": "^4.5.4",
     "lodash": "^4.17.21",
     "mailersend": "^2.2.0",
+    "mongodb": "^6.6.2",
     "mongoose": "^6.9.1",
     "nodemailer": "^6.9.7",
     "speakeasy": "^2.0.0",

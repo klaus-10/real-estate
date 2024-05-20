@@ -15,6 +15,7 @@ import {
 } from "interfaces/db/realEstate";
 import { BoundingBoxRequest } from "interfaces/request";
 import mongoose, { Schema } from "mongoose";
+import { MongoClient, ObjectId } from "mongodb";
 
 const phoneNumberSchema = new Schema<PhoneNumber>({
   type: String,
@@ -171,6 +172,15 @@ const realEstateSchema = new Schema<RealEstate>({
     type: { type: String },
     coordinates: [Number],
   },
+  location: {
+    latitude: Number,
+    longitude: Number,
+    marker: String,
+    region: String,
+    province: String,
+    macrozone: String,
+    city: String,
+  },
   seo: {
     anchor: String,
     title: String,
@@ -197,7 +207,8 @@ export const getRealEstates = async (
     .limit(limit);
 
   return {
-    total: totalCount / 25,
+    total: totalCount,
+    totalPages: totalCount / 25,
     data: realEstates,
   };
 };
@@ -208,42 +219,65 @@ export const getRealEstatesFromBoundingBox = async (
   limit: number,
   filter?: any
 ) => {
-  const query = {
-    "realEstate.loc": {
-      $geoWithin: {
-        $geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [boundingBox.west, boundingBox.south],
-              [boundingBox.east, boundingBox.south],
-              [boundingBox.east, boundingBox.north],
-              [boundingBox.west, boundingBox.north],
-              [boundingBox.west, boundingBox.south],
+  const uri = "mongodb://user:password@localhost:27017/";
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+
+    const database = client.db("real-estate");
+    const collection = database.collection("realestates");
+
+    const query = {
+      "realEstate.loc": {
+        $geoWithin: {
+          $geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south], // Closed loop
+              ],
             ],
-          ],
+          },
         },
       },
-    },
-  };
+    };
 
-  const projection = [
-    {
-      $project: {
-        "realEstate.loc": 1,
-        "realEstate.properties": { $slice: ["$realEstate.properties", 1] },
-        "seo.url": 1,
-        "seo.title": 1,
-        "realEstate.price.formattedValue": 1,
-      },
-    },
-  ];
+    const projectionDetails = {
+      "realEstate.loc": 1,
+      "realEstate.properties": { $slice: 1 },
+      "seo.url": 1,
+      "seo.title": 1,
+      "realEstate.price.formattedValue": 1,
+    };
 
-  const geodata = await RealEstateModel.find(query)
-    .skip(limit * (page - 1))
-    .limit(limit);
+    const result = await collection
+      .find(query)
+      .project(projectionDetails)
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .toArray();
 
-  return geodata;
+    if (result) {
+      return {
+        total: result.length,
+        totalPages: Math.ceil(result.length / 25),
+        data: result,
+      };
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getRealEstatesFromBoundingBox):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
 };
 
 export const getAllRealEstatesLocationFromBoundingBox = async (
@@ -252,72 +286,64 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
   limit: number,
   filter?: any
 ) => {
-  const query = {
-    "realEstate.loc": {
-      $geoWithin: {
-        $geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [boundingBox.west, boundingBox.south],
-              [boundingBox.east, boundingBox.south],
-              [boundingBox.east, boundingBox.north],
-              [boundingBox.west, boundingBox.north],
-              [boundingBox.west, boundingBox.south],
+  const uri = "mongodb://user:password@localhost:27017/";
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+
+    const database = client.db("real-estate");
+    const collection = database.collection("realestates");
+    const query = {
+      "realEstate.loc": {
+        $geoWithin: {
+          $geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south],
+              ],
             ],
-          ],
+          },
         },
       },
-    },
-  };
+    };
 
-  const projection = [
-    {
-      $project: {
-        "realEstate.loc": 1,
+    const projectionDetails = [
+      {
+        $project: {
+          "realEstate.loc": 1,
+        },
       },
-    },
-  ];
+    ];
 
-  return await RealEstateModel.aggregate([{ $match: query }, ...projection]);
+    const result = await collection
+      .find(query)
+      .project(projectionDetails)
+      .toArray();
+
+    if (result) {
+      console.log("Retrieved document:", result);
+      return {
+        total: result.length,
+        totalPages: Math.ceil(result.length / 25),
+        data: result,
+      };
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
 };
-
-// export const getAllRealEstatesByLocationName = async (
-//   locationName: string,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const totalCount = await RealEstateModel.find({
-//     "realEstate.location.properties.0": {
-//       $elemMatch: {
-//         $or: [
-//           { "location.city": locationName },
-//           { "location.region": locationName },
-//           { "location.province": locationName },
-//         ],
-//       },
-//     },
-//   }).count();
-//   const realEstates = await RealEstateModel.find({
-//     "realEstate.location.properties.0": {
-//       $elemMatch: {
-//         $or: [
-//           { "location.city": locationName },
-//           { "location.region": locationName },
-//           { "location.province": locationName },
-//         ],
-//       },
-//     },
-//   })
-//     .skip(limit * (page - 1))
-//     .limit(limit);
-
-//   return {
-//     total: totalCount,
-//     data: realEstates,
-//   };
-// };
 
 export const getAllRealEstatesLocationByLocationName = async (
   locationName: string,
@@ -325,20 +351,48 @@ export const getAllRealEstatesLocationByLocationName = async (
   limit: number,
   filter?: any
 ) => {
-  return RealEstateModel.find(
-    {
-      "realEstate.location.properties.0": {
-        $elemMatch: {
-          $or: [
-            { "location.city": locationName },
-            { "location.region": locationName },
-            { "location.province": locationName },
-          ],
-        },
-      },
-    },
-    { "realEstate.loc": 1, _id: 0 }
-  ); // Projection to include only the loc field
+  const uri = "mongodb://user:password@localhost:27017/";
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+
+    const database = client.db("real-estate");
+    const collection = database.collection("realestates");
+
+    const query = {
+      $or: [
+        { "realEstate.location.city": locationName },
+        { "realEstate.location.region": locationName },
+        { "realEstate.location.province": locationName },
+      ],
+      ...filter, // Additional filtering
+    };
+
+    const projectionDetails = { "realEstate.loc": 1, _id: 0 };
+
+    const result = await collection
+      .find(query)
+      .project(projectionDetails)
+      .toArray();
+
+    if (result) {
+      console.log("Retrieved document:", result);
+      return {
+        total: result.length,
+        totalPages: Math.ceil(result.length / 25),
+        data: result,
+      };
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getAllRealEstatesLocationByLocationName):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
 };
 
 export const getAllRealEstatesByLocationName = async (
@@ -347,51 +401,37 @@ export const getAllRealEstatesByLocationName = async (
   limit: number,
   filter?: any
 ) => {
-  const testQuery = await RealEstateModel.find({
-    $or: [
-      { "realEstate.properties.0.location.city": locationName },
-      { "realEstate.properties.0.location.region": locationName },
-      { "realEstate.properties.0.location.province": locationName },
-    ],
-  });
+  const uri = "mongodb://user:password@localhost:27017/";
+  const client = new MongoClient(uri);
 
-  console.log(testQuery);
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+
+    const database = client.db("real-estate");
+    const collection = database.collection("realestates");
+
+    const query = {
+      "realEstate.location.city": locationName,
+      ...filter,
+    };
+
+    const result = await collection.find(query).toArray();
+
+    if (result) {
+      console.log("Retrieved document:", result);
+      return {
+        total: result.length,
+        totalPages: Math.ceil(result.length / 25),
+        data: result,
+      };
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getAllRealEstatesByLocationName):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
 };
-
-// export const getAllRealEstatesByLocationName = async (
-//   locationName: string,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const matchStage = {
-//     $match: {
-//       $or: [
-//         { "realEstate.location.properties.0.location.city": locationName },
-//         { "realEstate.location.properties.0.location.region": locationName },
-//         { "realEstate.location.properties.0.location.province": locationName },
-//       ],
-//     },
-//   };
-
-//   const facetStage = {
-//     $facet: {
-//       totalCount: [{ $count: "count" }],
-//       realEstates: [{ $skip: limit * (page - 1) }, { $limit: limit }],
-//     },
-//   };
-
-//   const pipeline = [matchStage, facetStage];
-
-//   const result = await RealEstateModel.aggregate(pipeline).exec();
-
-//   const totalCount = result[0].totalCount[0]
-//     ? result[0].totalCount[0].count
-//     : 0;
-//   const realEstates = result[0].realEstates;
-
-//   return {
-//     total: totalCount,
-//     data: realEstates,
-//   };
-// };

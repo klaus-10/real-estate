@@ -21,6 +21,20 @@ export const getRealEstateList = async (
   req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
+  // #swagger.tags = ['realEstate']
+  // #swagger.summary = 'default get all api'
+  // #swagger.description = 'default get all api'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
+  /* #swagger.parameters['parameterName'] = {
+        in: <string>,                            
+        description: <string>,                   
+        required: <boolean>,                     
+        type: <string>,                          
+        format: <string>,                        
+        schema: <array>, <object> or <string>    
+} */
   try {
     const { page, limit, filter } = req.query;
 
@@ -44,6 +58,12 @@ export const getRealEstatesFromBoundingBoxList = async (
   >,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstate - FromBoundingBox'
+  // #swagger.description = 'RealEstate All - RealEstate - FromBoundingBox'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
   try {
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
@@ -79,6 +99,11 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   >,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstateLocations - FromBoundingBox'
+  // #swagger.description = 'RealEstate All - RealEstateLocations - FromBoundingBox'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
   try {
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
@@ -109,6 +134,12 @@ export const getAllRealEstatesByLocationNameList = async (
   req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstates - ByLocationName'
+  // #swagger.description = 'RealEstate All - RealEstates - ByLocationName'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
   try {
     const { locationName, page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
@@ -143,6 +174,11 @@ export const getAllRealEstatesLocationByLocationNameList = async (
   >,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate Location - ByLocationName'
+  // #swagger.description = 'RealEstate Location - ByLocationName'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
   try {
     const { locationName, page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;

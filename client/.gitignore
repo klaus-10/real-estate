@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 real-estate-env
-
+real-estate
 venv
 ./src/lib/docker/real-estate-env
+.src/lib/immobiliare/real-estate
