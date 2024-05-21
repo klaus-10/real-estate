@@ -213,6 +213,73 @@ export const getRealEstates = async (
   };
 };
 
+// export const getRealEstatesFromBoundingBox = async (
+//   boundingBox: BoundingBoxRequest,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const client = new MongoClient(process.env.MONGOURI);
+
+//   try {
+//     await client.connect();
+//     console.log("Connected successfully");
+
+//     const database = client.db("real-estate");
+//     const collection = database.collection("realestates");
+
+//     const query = {
+//       "realEstate.loc": {
+//         $geoWithin: {
+//           $geometry: {
+//             type: "Polygon",
+//             coordinates: [
+//               [
+//                 [boundingBox.west, boundingBox.south],
+//                 [boundingBox.east, boundingBox.south],
+//                 [boundingBox.east, boundingBox.north],
+//                 [boundingBox.west, boundingBox.north],
+//                 [boundingBox.west, boundingBox.south], // Closed loop
+//               ],
+//             ],
+//           },
+//         },
+//       },
+//     };
+
+//     const projectionDetails = {
+//       "realEstate.loc": 1,
+//       "realEstate.properties": { $slice: 1 },
+//       "seo.url": 1,
+//       "seo.title": 1,
+//       "realEstate.price.formattedValue": 1,
+//     };
+
+//     const total = await collection.countDocuments(query);
+
+//     const result = await collection
+//       .find(query)
+//       .project(projectionDetails)
+//       .skip(limit * (page - 1))
+//       .limit(limit)
+//       .toArray();
+
+//     if (result) {
+//       return {
+//         total: total,
+//         totalPages: Math.ceil(total / 25),
+//         data: result,
+//       };
+//     } else {
+//       console.log("Document not found");
+//     }
+//   } catch (e) {
+//     console.error("Error (getRealEstatesFromBoundingBox):", e);
+//   } finally {
+//     await client.close();
+//     console.log("Connection closed");
+//   }
+// };
 export const getRealEstatesFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
   page: number,
@@ -225,48 +292,93 @@ export const getRealEstatesFromBoundingBox = async (
     await client.connect();
     console.log("Connected successfully");
 
+    // Verifica se `page` e `limit` sono numeri validi
+    if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
+      console.log("limit: ", limit, "page: ", page);
+      throw new Error("Invalid page or limit");
+    }
+
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
 
     const query = {
-      "realEstate.loc": {
-        $geoWithin: {
-          $geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [boundingBox.west, boundingBox.south],
-                [boundingBox.east, boundingBox.south],
-                [boundingBox.east, boundingBox.north],
-                [boundingBox.west, boundingBox.north],
-                [boundingBox.west, boundingBox.south], // Closed loop
+      $match: {
+        "realEstate.loc": {
+          $geoWithin: {
+            $geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [boundingBox.west, boundingBox.south],
+                  [boundingBox.east, boundingBox.south],
+                  [boundingBox.east, boundingBox.north],
+                  [boundingBox.west, boundingBox.north],
+                  [boundingBox.west, boundingBox.south], // Closed loop
+                ],
               ],
-            ],
+            },
           },
         },
       },
     };
+    const pipeline = [
+      {
+        $match: {
+          "realEstate.loc": {
+            $geoWithin: {
+              $geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [boundingBox.west, boundingBox.south],
+                    [boundingBox.east, boundingBox.south],
+                    [boundingBox.east, boundingBox.north],
+                    [boundingBox.west, boundingBox.north],
+                    [boundingBox.west, boundingBox.south], // Closed loop
+                  ],
+                ],
+              },
+            },
+          },
+        },
+      },
+      {
+        $facet: {
+          data: [
+            { $skip: (page - 1) * limit }, // Correzione per il calcolo del valore di skip
+            { $limit: limit },
+            {
+              $project: {
+                "realEstate.loc": 1,
+                "realEstate.properties": {
+                  $slice: ["$realEstate.properties", 1],
+                },
+                "seo.url": 1,
+                "seo.title": 1,
+                "realEstate.price.formattedValue": 1,
+              },
+            },
+          ],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+    ];
 
-    const projectionDetails = {
-      "realEstate.loc": 1,
-      "realEstate.properties": { $slice: 1 },
-      "seo.url": 1,
-      "seo.title": 1,
-      "realEstate.price.formattedValue": 1,
-    };
-
-    const result = await collection
-      .find(query)
-      .project(projectionDetails)
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .toArray();
+    const total = await collection.countDocuments(query);
+    const result = await collection.aggregate(pipeline).next();
 
     if (result) {
+      console.log(
+        "Retrieved document:",
+        " total ",
+        total,
+        " totalPages: ",
+        Math.ceil(total / limit)
+      );
       return {
-        total: result.length,
-        totalPages: Math.ceil(result.length / 25),
-        data: result,
+        total: total,
+        totalPages: Math.ceil(total / limit),
+        data: result.data,
       };
     } else {
       console.log("Document not found");
@@ -278,6 +390,71 @@ export const getRealEstatesFromBoundingBox = async (
     console.log("Connection closed");
   }
 };
+
+// export const getAllRealEstatesLocationFromBoundingBox = async (
+//   boundingBox: BoundingBoxRequest,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const client = new MongoClient(process.env.MONGOURI);
+
+//   try {
+//     await client.connect();
+//     console.log("Connected successfully");
+
+//     const database = client.db("real-estate");
+//     const collection = database.collection("realestates");
+//     const query = {
+//       "realEstate.loc": {
+//         $geoWithin: {
+//           $geometry: {
+//             type: "Polygon",
+//             coordinates: [
+//               [
+//                 [boundingBox.west, boundingBox.south],
+//                 [boundingBox.east, boundingBox.south],
+//                 [boundingBox.east, boundingBox.north],
+//                 [boundingBox.west, boundingBox.north],
+//                 [boundingBox.west, boundingBox.south],
+//               ],
+//             ],
+//           },
+//         },
+//       },
+//     };
+
+//     const projectionDetails = [
+//       {
+//         $project: {
+//           "realEstate.loc": 1,
+//         },
+//       },
+//     ];
+//     const total = await collection.countDocuments(query);
+
+//     const result = await collection
+//       .find(query)
+//       .project(projectionDetails)
+//       .toArray();
+
+//     if (result) {
+//       console.log("Retrieved document:", result);
+//       return {
+//         total: total,
+//         totalPages: Math.ceil(total / 25),
+//         data: result,
+//       };
+//     } else {
+//       console.log("Document not found");
+//     }
+//   } catch (e) {
+//     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
+//   } finally {
+//     await client.close();
+//     console.log("Connection closed");
+//   }
+// };
 
 export const getAllRealEstatesLocationFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
@@ -312,25 +489,40 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
       },
     };
 
-    const projectionDetails = [
+    const pipeline = [
+      { $match: query },
+      { $project: { "realEstate.loc": 1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
       {
-        $project: {
-          "realEstate.loc": 1,
+        $facet: {
+          data: [
+            {
+              $project: {
+                "realEstate.loc": 1,
+              },
+            },
+          ],
+          totalCount: [{ $count: "count" }],
         },
       },
     ];
 
-    const result = await collection
-      .find(query)
-      .project(projectionDetails)
-      .toArray();
+    const total = await collection.countDocuments(query);
+    const result = await collection.aggregate(pipeline).next();
 
     if (result) {
-      console.log("Retrieved document:", result);
+      console.log(
+        "Retrieved document:",
+        " total ",
+        total,
+        " totalPages: ",
+        Math.ceil(total / limit)
+      );
       return {
-        total: result.length,
-        totalPages: Math.ceil(result.length / 25),
-        data: result,
+        total: total,
+        totalPages: Math.ceil(total / limit),
+        data: result.data,
       };
     } else {
       console.log("Document not found");
@@ -369,6 +561,8 @@ export const getAllRealEstatesLocationByLocationName = async (
 
     const projectionDetails = { "realEstate.loc": 1, _id: 0 };
 
+    const total = await collection.countDocuments(query);
+
     const result = await collection
       .find(query)
       .project(projectionDetails)
@@ -377,8 +571,8 @@ export const getAllRealEstatesLocationByLocationName = async (
     if (result) {
       console.log("Retrieved document:", result);
       return {
-        total: result.length,
-        totalPages: Math.ceil(result.length / 25),
+        total: total,
+        totalPages: Math.ceil(total / 25),
         data: result,
       };
     } else {
@@ -391,6 +585,47 @@ export const getAllRealEstatesLocationByLocationName = async (
     console.log("Connection closed");
   }
 };
+
+// export const getAllRealEstatesByLocationName = async (
+//   locationName: string,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const client = new MongoClient(process.env.MONGOURI);
+
+//   try {
+//     await client.connect();
+//     console.log("Connected successfully");
+
+//     const database = client.db("real-estate");
+//     const collection = database.collection("realestates");
+
+//     const query = {
+//       "realEstate.location.city": locationName,
+//       ...filter,
+//     };
+//     const total = await collection.countDocuments(query);
+
+//     const result = await collection.find(query).toArray();
+
+//     if (result) {
+//       console.log("Retrieved document:", result);
+//       return {
+//         total: total,
+//         totalPages: Math.ceil(total / 25),
+//         data: result,
+//       };
+//     } else {
+//       console.log("Document not found");
+//     }
+//   } catch (e) {
+//     console.error("Error (getAllRealEstatesByLocationName):", e);
+//   } finally {
+//     await client.close();
+//     console.log("Connection closed");
+//   }
+// };
 
 export const getAllRealEstatesByLocationName = async (
   locationName: string,
@@ -407,19 +642,47 @@ export const getAllRealEstatesByLocationName = async (
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
 
+    // const query = {
+    //   "realEstate.location.city": locationName,
+    //   ...filter,
+    // };
+
     const query = {
-      "realEstate.location.city": locationName,
-      ...filter,
+      $or: [
+        { "realEstate.location.city": locationName },
+        { "realEstate.location.region": locationName },
+        { "realEstate.location.province": locationName },
+      ],
+      ...filter, // Additional filtering
     };
 
-    const result = await collection.find(query).toArray();
+    const pipeline = [
+      { $match: query },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      {
+        $facet: {
+          data: [{ $project: { realEstate: 1, seo: 1, _id: 1 } }],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+    ];
+
+    const total = await collection.countDocuments(query);
+    const result = await collection.aggregate(pipeline).next();
 
     if (result) {
-      console.log("Retrieved document:", result);
+      console.log(
+        "Retrieved document:",
+        " total ",
+        total,
+        " totalPages: ",
+        Math.ceil(total / limit)
+      );
       return {
-        total: result.length,
-        totalPages: Math.ceil(result.length / 25),
-        data: result,
+        total: total,
+        totalPages: Math.ceil(total / limit),
+        data: result.data,
       };
     } else {
       console.log("Document not found");

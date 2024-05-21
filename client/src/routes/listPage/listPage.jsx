@@ -6,12 +6,13 @@ import { listData } from "../../lib/dummydata";
 import {
   getAllRealEstatesLocationByLocationNameListAPI,
   getAllRealEstatesLocationFromBoundingBoxListAPI,
-  getRealEstateDataAPI,
+  getRealEstateDataByLocationNameAPI,
   getRealEstatesFromBoundingBoxListAPI,
 } from "../../utils/searchAPI";
 import { scrollToToTopWithElemRef } from "../../utils/utils";
 import "./listPage.scss";
 import Map from "../../components/map/Map";
+import { useSearchParams } from "react-router-dom";
 
 function ListPage() {
   const wrapperRef = useRef(null);
@@ -62,6 +63,8 @@ function ListPage() {
   };
 
   const handleSetAllRealStatesData = (newAllData) => {
+    console.log("newAllData: ", newAllData);
+    setAllRealStatesData([]);
     setAllRealStatesData(newAllData);
   };
 
@@ -77,9 +80,11 @@ function ListPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (searchIcon) {
-        // todo: replace this call with more selected query based on city/region/quarter
-        await fetchRealEstateData();
-        await fetchAllRealEstateDataByLocationName();
+        // retrive all RealEstates page items
+        await fetchRealEstateDataByName();
+
+        // retrive all locations displayed by points
+        await fetchAllRealEstateLocationDataByLocationName();
         // todo: set search on map to FALSE
         // todo: add an event listener for on click outside the map ?
       }
@@ -94,7 +99,7 @@ function ListPage() {
     // todo: refract this use effect baseod on isMapSearch param
 
     const fetchDataFromSearchBar = async () => {
-      await fetchRealEstateData();
+      await fetchRealEstateDataByName();
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
@@ -107,13 +112,17 @@ function ListPage() {
     else fetchDataFromMap();
   }, [page]);
 
-  const fetchRealEstateData = async () => {
+  const fetchRealEstateDataByName = async () => {
     try {
-      console.log("Normal Data");
-      const repsonse = await getRealEstateDataAPI(page);
-      console.log("repsonse: ", repsonse);
+      if (filterOptions.city === "") throw new Error("Please insert a city");
+      console.log("page: ", page);
+      const repsonse = await getRealEstateDataByLocationNameAPI(
+        filterOptions.city,
+        page
+      );
+      console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
       handleSetData(repsonse?.data);
-      handleSetTotalPages(repsonse?.total);
+      handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
     } catch (error) {
       // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
@@ -133,7 +142,7 @@ function ListPage() {
       );
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
-      handleSetTotalPages(repsonse?.total);
+      handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
     } catch (error) {
       // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
@@ -154,7 +163,7 @@ function ListPage() {
       );
       console.log("repsonse fetchAllRealEstateDataByBoundaryBox: ", repsonse);
       handleSetData(repsonse?.data);
-      handleSetTotalPages(repsonse?.total);
+      handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
     } catch (error) {
       // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
@@ -162,28 +171,22 @@ function ListPage() {
     }
   };
 
-  const fetchAllRealEstateDataByLocationName = async () => {
+  const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");
-      if (boundingBox === null) throw new Error("Boundingbox component ERROR");
       console.log("BoundaryBox Data");
       // TODO: handle isMapSearch or isSearchIcon
-      const { west, east, north, south } = boundingBox;
       const repsonse = await getAllRealEstatesLocationByLocationNameListAPI(
         filterOptions.city,
-        page,
-        west,
-        east,
-        north,
-        south
+        page
       );
       console.log(
         "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
         repsonse
       );
-      handleSetAllRealStatesData(repsonse);
-      // handleSetTotalPages(repsonse?.total);
-      // scrollToToTopWithElemRef(wrapperRef);
+      handleSetAllRealStatesData(repsonse?.data);
+      handleSetTotalPages(repsonse?.totalPages);
+      scrollToToTopWithElemRef(wrapperRef);
     } catch (error) {
       // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
       console.error("Errore durante il recupero dei dati:", error);

@@ -16,6 +16,7 @@ export const getRealEstateDataAPI = async (page) => {
     const response = await axios.get("http://localhost:8080/real-estate/list", {
       params: { page: page },
     });
+    console.log("realEstate - default: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -45,6 +46,7 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
       body,
       { params: { page: page } }
     );
+    console.log("realEstate - ByBoundaryBox: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -74,6 +76,7 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
       body,
       { params: { page: page } }
     );
+    console.log("Location - ByLocationName & ByBoundingBox: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -91,15 +94,44 @@ export const getAllRealEstatesLocationByLocationNameListAPI = async (
 ) => {
   try {
     console.log(
-      "url: ",
+      "request_url: ",
       "http://localhost:8080/real-estate/locationsByName",
       " params: ",
       { page: page, locationName: locationName }
     );
     const response = await axios.get(
       "http://localhost:8080/real-estate/locationsByName",
-      { params: { page: page } }
+      { params: { locationName: locationName, page: page } }
     );
+    console.log("Location - ByLocationName: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching real estate data:", error);
+    // throw error; // Rethrow the error to be handled elsewhere if needed
+  }
+};
+
+// getRealEstateDataByLocationNameAPI
+export const getRealEstateDataByLocationNameAPI = async (
+  locationName,
+  page,
+  west,
+  east,
+  north,
+  south
+) => {
+  try {
+    console.log(
+      "request_url: ",
+      "http://localhost:8080/real-estate/byName",
+      " params: ",
+      { page: page, locationName: locationName }
+    );
+    const response = await axios.get(
+      "http://localhost:8080/real-estate/byName",
+      { params: { locationName: locationName, page: page } }
+    );
+    console.log("Location - ByLocationName: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);

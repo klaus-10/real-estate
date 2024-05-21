@@ -166,12 +166,7 @@ export const getAllRealEstatesByLocationNameList = async (
 };
 
 export const getAllRealEstatesLocationByLocationNameList = async (
-  req: express.Request<
-    {},
-    {},
-    BoundingBoxRequest,
-    GetRealEstateListQueryParams
-  >,
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
   // #swagger.tags = ['RealEstate']
@@ -192,7 +187,8 @@ export const getAllRealEstatesLocationByLocationNameList = async (
       filter
     );
 
-    // console.log("geoData: ", realEstateList.geodata);
+    console.log("query params: ", locationName, page, limit, filter);
+    console.log("DATA: ", realEstateList);
 
     if (!realEstateList) {
       return res.status(404).send("realEstateList not found");

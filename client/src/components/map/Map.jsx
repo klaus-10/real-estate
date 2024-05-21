@@ -34,6 +34,9 @@ function Map({
     );
   });
 
+  useEffect(() => {
+    console.log("DATA_LENGTH: ", items.length);
+  }, [items]);
   // TODO: add current location position
   return (
     <MapContainer

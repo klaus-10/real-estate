@@ -19,6 +19,14 @@ function Filter({
       [name]: value,
     });
 
+    searchParams.set("city", filterOptions.city);
+    searchParams.set("type", filterOptions.type);
+    searchParams.set("property", filterOptions.property);
+    searchParams.set("minPrice", filterOptions.minPrice);
+    searchParams.set("maxPrice", filterOptions.maxPrice);
+    searchParams.set("bedroom", filterOptions.bedroom);
+    searchParams.set("page", page);
+
     console.log(filterOptions);
   };
 
