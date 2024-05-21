@@ -32,6 +32,8 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
   south
 ) => {
   try {
+    const body = { west, east, north, south };
+
     console.log(
       "url: ",
       "http://localhost:8080/real-estate/boundingBox",
@@ -40,7 +42,6 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
       "body",
       body
     );
-    const body = { west, east, north, south };
     const response = await axios.post(
       "http://localhost:8080/real-estate/boundingBox",
       body,
@@ -55,13 +56,14 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
 };
 
 export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
-  page,
   west,
   east,
   north,
   south
 ) => {
   try {
+    const body = { west, east, north, south };
+    const page = 1;
     console.log(
       "url: ",
       "http://localhost:8080/real-estate/boundingBox",
@@ -70,7 +72,6 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
       "body",
       body
     );
-    const body = { west, east, north, south };
     const response = await axios.post(
       "http://localhost:8080/real-estate/locationsByBoundingBox",
       body,

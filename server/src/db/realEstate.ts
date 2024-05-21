@@ -292,60 +292,34 @@ export const getRealEstatesFromBoundingBox = async (
     await client.connect();
     console.log("Connected successfully");
 
-    // Verifica se `page` e `limit` sono numeri validi
-    if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
-      console.log("limit: ", limit, "page: ", page);
-      throw new Error("Invalid page or limit");
-    }
-
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
 
     const query = {
-      $match: {
-        "realEstate.loc": {
-          $geoWithin: {
-            $geometry: {
-              type: "Polygon",
-              coordinates: [
-                [
-                  [boundingBox.west, boundingBox.south],
-                  [boundingBox.east, boundingBox.south],
-                  [boundingBox.east, boundingBox.north],
-                  [boundingBox.west, boundingBox.north],
-                  [boundingBox.west, boundingBox.south], // Closed loop
-                ],
+      "realEstate.loc": {
+        $geoWithin: {
+          $geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [boundingBox.west, boundingBox.south],
+                [boundingBox.east, boundingBox.south],
+                [boundingBox.east, boundingBox.north],
+                [boundingBox.west, boundingBox.north],
+                [boundingBox.west, boundingBox.south], // Closed loop
               ],
-            },
+            ],
           },
         },
       },
     };
+
     const pipeline = [
-      {
-        $match: {
-          "realEstate.loc": {
-            $geoWithin: {
-              $geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [boundingBox.west, boundingBox.south],
-                    [boundingBox.east, boundingBox.south],
-                    [boundingBox.east, boundingBox.north],
-                    [boundingBox.west, boundingBox.north],
-                    [boundingBox.west, boundingBox.south], // Closed loop
-                  ],
-                ],
-              },
-            },
-          },
-        },
-      },
+      { $match: query },
       {
         $facet: {
           data: [
-            { $skip: (page - 1) * limit }, // Correzione per il calcolo del valore di skip
+            { $skip: (page - 1) * limit },
             { $limit: limit },
             {
               $project: {
@@ -364,24 +338,19 @@ export const getRealEstatesFromBoundingBox = async (
       },
     ];
 
-    const total = await collection.countDocuments(query);
     const result = await collection.aggregate(pipeline).next();
 
     if (result) {
-      console.log(
-        "Retrieved document:",
-        " total ",
-        total,
-        " totalPages: ",
-        Math.ceil(total / limit)
-      );
       return {
-        total: total,
-        totalPages: Math.ceil(total / limit),
+        total: result.totalCount[0] ? result.totalCount[0].count : 0,
+        totalPages: result.totalCount[0]
+          ? Math.ceil(result.totalCount[0].count / limit)
+          : 0,
         data: result.data,
       };
     } else {
       console.log("Document not found");
+      return { total: 0, totalPages: 0, data: [] };
     }
   } catch (e) {
     console.error("Error (getRealEstatesFromBoundingBox):", e);
@@ -456,9 +425,87 @@ export const getRealEstatesFromBoundingBox = async (
 //   }
 // };
 
+// export const getAllRealEstatesLocationFromBoundingBox = async (
+//   boundingBox: BoundingBoxRequest,
+//   page: number,
+//   limit: number,
+//   filter?: any
+// ) => {
+//   const client = new MongoClient(process.env.MONGOURI);
+
+//   try {
+//     await client.connect();
+//     console.log("Connected successfully");
+
+//     const database = client.db("real-estate");
+//     const collection = database.collection("realestates");
+//     const query = {
+//       "realEstate.loc": {
+//         $geoWithin: {
+//           $geometry: {
+//             type: "Polygon",
+//             coordinates: [
+//               [
+//                 [boundingBox.west, boundingBox.south],
+//                 [boundingBox.east, boundingBox.south],
+//                 [boundingBox.east, boundingBox.north],
+//                 [boundingBox.west, boundingBox.north],
+//                 [boundingBox.west, boundingBox.south],
+//               ],
+//             ],
+//           },
+//         },
+//       },
+//     };
+
+//     const pipeline = [
+//       { $match: query },
+//       { $project: { "realEstate.loc": 1 } },
+//       { $skip: (page - 1) * limit },
+//       { $limit: limit },
+//       {
+//         $facet: {
+//           data: [
+//             {
+//               $project: {
+//                 "realEstate.loc": 1,
+//               },
+//             },
+//           ],
+//           totalCount: [{ $count: "count" }],
+//         },
+//       },
+//     ];
+
+//     const total = await collection.countDocuments(query);
+//     const result = await collection.aggregate(pipeline).next();
+
+//     if (result) {
+//       console.log(
+//         "Retrieved document:",
+//         " total ",
+//         total,
+//         " totalPages: ",
+//         Math.ceil(total / limit)
+//       );
+//       return {
+//         total: total,
+//         totalPages: Math.ceil(total / limit),
+//         data: result.data,
+//       };
+//     } else {
+//       console.log("Document not found");
+//     }
+//   } catch (e) {
+//     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
+//   } finally {
+//     await client.close();
+//     console.log("Connection closed");
+//   }
+// };
+
 export const getAllRealEstatesLocationFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
-  page: number,
   limit: number,
   filter?: any
 ) => {
@@ -470,6 +517,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
 
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
+
     const query = {
       "realEstate.loc": {
         $geoWithin: {
@@ -481,7 +529,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
                 [boundingBox.east, boundingBox.south],
                 [boundingBox.east, boundingBox.north],
                 [boundingBox.west, boundingBox.north],
-                [boundingBox.west, boundingBox.south],
+                [boundingBox.west, boundingBox.south], // Closed loop
               ],
             ],
           },
@@ -491,15 +539,18 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
 
     const pipeline = [
       { $match: query },
-      { $project: { "realEstate.loc": 1 } },
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
       {
         $facet: {
           data: [
             {
               $project: {
                 "realEstate.loc": 1,
+                "realEstate.properties": {
+                  $slice: ["$realEstate.properties", 1],
+                },
+                "seo.url": 1,
+                "seo.title": 1,
+                "realEstate.price.formattedValue": 1,
               },
             },
           ],
@@ -508,27 +559,22 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
       },
     ];
 
-    const total = await collection.countDocuments(query);
     const result = await collection.aggregate(pipeline).next();
 
     if (result) {
-      console.log(
-        "Retrieved document:",
-        " total ",
-        total,
-        " totalPages: ",
-        Math.ceil(total / limit)
-      );
       return {
-        total: total,
-        totalPages: Math.ceil(total / limit),
+        total: result.totalCount[0] ? result.totalCount[0].count : 0,
+        totalPages: result.totalCount[0]
+          ? Math.ceil(result.totalCount[0].count / limit)
+          : 0,
         data: result.data,
       };
     } else {
       console.log("Document not found");
+      return { total: 0, totalPages: 0, data: [] };
     }
   } catch (e) {
-    console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
+    console.error("Error (getRealEstatesFromBoundingBox):", e);
   } finally {
     await client.close();
     console.log("Connection closed");

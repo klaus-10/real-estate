@@ -65,11 +65,13 @@ export const getRealEstatesFromBoundingBoxList = async (
   // #swagger.ignore = false
 
   try {
+    console.log("body: ", req.body);
+    console.log("query: ", req.query);
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
     const boundingBox = req.body;
 
-    // console.log("boundingBox: ",boundingBox);
+    console.log("boundingBox: ", boundingBox);
 
     const realEstateList = await getRealEstatesFromBoundingBox(
       boundingBox,
@@ -77,6 +79,8 @@ export const getRealEstatesFromBoundingBoxList = async (
       25,
       filter
     );
+
+    // const realEstateList = ["a", "b"];
 
     // console.log("geoData: ", realEstateList.geodata);
 
@@ -107,13 +111,12 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   try {
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
-    const boundingBox = req.body;
+    console.log("boundingBox: ", req.body);
 
-    // console.log("boundingBox: ",boundingBox);
+    const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
       boundingBox,
-      page,
       25,
       filter
     );

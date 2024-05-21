@@ -20,6 +20,7 @@ const MapBoundingBox = ({ onBoundingBoxChange, isMapSearch }) => {
 
       // Pass bounding box to the parent component
       onBoundingBoxChange(boundingBox);
+      // console.log("boundingBox: ", boundingBox);
     };
 
     // Trigger handleMoveEnd when the map is ready (on load)

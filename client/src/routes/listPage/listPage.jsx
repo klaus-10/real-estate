@@ -97,20 +97,37 @@ function ListPage() {
 
   useEffect(() => {
     // todo: refract this use effect baseod on isMapSearch param
-
     const fetchDataFromSearchBar = async () => {
       await fetchRealEstateDataByName();
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
-    const fetchDataFromMap = async () => {
-      await fetchRealEstateDataByBoundaryBox();
+    if (!isMapSearch) fetchDataFromSearchBar();
+  }, [page]);
+
+  useEffect(() => {
+    const fetchAllRealEstateLocationDataByBoundaryBox = async () => {
+      const repsonse = await getAllRealEstatesLocationFromBoundingBoxListAPI(
+        boundingBox?.west,
+        boundingBox?.east,
+        boundingBox?.north,
+        boundingBox?.south
+      );
+      console.log("ok");
+
+      handleSetAllRealStatesData(repsonse?.data);
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
+    const fetchDataFromMap = async () => {
+      await fetchRealEstateDataByBoundaryBox();
+      scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
+    };
 
-    if (!isMapSearch) fetchDataFromSearchBar();
-    else fetchDataFromMap();
-  }, [page]);
+    if (isMapSearch) {
+      fetchAllRealEstateLocationDataByBoundaryBox();
+      fetchDataFromMap();
+    }
+  }, [boundingBox]);
 
   const fetchRealEstateDataByName = async () => {
     try {
@@ -135,10 +152,10 @@ function ListPage() {
       console.log("BoundaryBox Data");
       const repsonse = await getRealEstatesFromBoundingBoxListAPI(
         page,
-        west,
-        east,
-        north,
-        south
+        boundingBox?.west,
+        boundingBox?.east,
+        boundingBox?.north,
+        boundingBox?.south
       );
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
@@ -150,26 +167,26 @@ function ListPage() {
     }
   }; // fetchAllRealEstateDataByLocationName
 
-  const fetchAllRealEstateDataByBoundaryBox = async () => {
-    try {
-      console.log("BoundaryBox Data");
-      // TODO: handle isMapSearch or isSearchIcon
-      const repsonse = await getAllRealEstatesLocationFromBoundingBoxListAPI(
-        page,
-        west,
-        east,
-        north,
-        south
-      );
-      console.log("repsonse fetchAllRealEstateDataByBoundaryBox: ", repsonse);
-      handleSetData(repsonse?.data);
-      handleSetTotalPages(repsonse?.totalPages);
-      scrollToToTopWithElemRef(wrapperRef);
-    } catch (error) {
-      // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
-      console.error("Errore durante il recupero dei dati:", error);
-    }
-  };
+  // const fetchAllRealEstateDataByBoundaryBox = async () => {
+  //   try {
+  //     console.log("BoundaryBox Data");
+  //     // TODO: handle isMapSearch or isSearchIcon
+  //     const repsonse = await getAllRealEstatesLocationFromBoundingBoxListAPI(
+  //       page,
+  //       boundingBox?.west,
+  //       boundingBox?.east,
+  //       boundingBox?.north,
+  //       boundingBox?.south
+  //     );
+  //     console.log("repsonse fetchAllRealEstateDataByBoundaryBox: ", repsonse);
+  //     handleSetData(repsonse?.data);
+  //     handleSetTotalPages(repsonse?.totalPages);
+  //     scrollToToTopWithElemRef(wrapperRef);
+  //   } catch (error) {
+  //     // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
+  //     console.error("Errore durante il recupero dei dati:", error);
+  //   }
+  // };
 
   const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {
