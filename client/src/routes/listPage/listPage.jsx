@@ -12,7 +12,7 @@ import {
 import { scrollToToTopWithElemRef } from "../../utils/utils";
 import "./listPage.scss";
 import Map from "../../components/map/Map";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 function ListPage() {
   const wrapperRef = useRef(null);
@@ -24,14 +24,40 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
 
-  // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
+  // // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
+  // const [filterOptions, setFilterOptions] = useState({
+  //   city: "",
+  //   type: "",
+  //   property: "",
+  //   minPrice: "",
+  //   maxPrice: "",
+  //   bedroom: "",
+  // });
   const [filterOptions, setFilterOptions] = useState({
-    city: "",
-    type: "",
-    property: "",
-    minPrice: "",
-    maxPrice: "",
-    bedroom: "",
+    city: "", // locazione
+    type: "", // affitto, vendita, asta
+    property: "", // tipo di costruzione
+    price: {
+      min: "",
+      max: "",
+    },
+    rooms: -1, // numero stanze da letto o numero locali ?
+    autore: "", // privato o agenzia ?
+    date: {
+      // data dell'annuncio
+      from: "",
+      to: "",
+    },
+    mq: {
+      // metri quadri
+      from: "",
+      to: "",
+    },
+    mqPrice: {
+      // metri quadri
+      from: "",
+      to: "",
+    },
   });
 
   // leaflet bounding box coordinates

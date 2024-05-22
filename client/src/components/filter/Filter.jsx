@@ -7,35 +7,46 @@ function Filter({
   page,
   handleSetTotalPages,
   handleSearchIcon,
+  filterOptions,
+  setFilterOptions,
 }) {
+  // const [filterOptions, setFilterOptions] = useState({
+  //   city: "",
+  //   type: "",
+  //   property: "",
+  //   minPrice: "",
+  //   maxPrice: "",
+  //   bedroom: "",
+  // });
+
   // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
-  const [filterOptions, setFilterOptions] = useState({
-    city: "", // locazione
-    type: "", // affitto, vendita, asta
-    property: "", // tipo di costruzione
-    price: {
-      min: "",
-      max: "",
-    },
-    rooms: 100000, // numero locali
-    bedroom: "", // numero stanze da letto o numero locali ?
-    autore: "", // privato o agenzia ?
-    date: {
-      // data dell'annuncio
-      from: "",
-      to: "",
-    },
-    mq: {
-      // metri quadri
-      from: "",
-      to: "",
-    },
-    mqPrice: {
-      // metri quadri
-      from: "",
-      to: "",
-    },
-  });
+  // const [filterOptions, setFilterOptions] = useState({
+  //   city: "", // locazione
+  //   type: "", // affitto, vendita, asta
+  //   property: "", // tipo di costruzione
+  //   price: {
+  //     min: "",
+  //     max: "",
+  //   },
+  //   rooms: 100000, // numero locali
+  //   bedroom: "", // numero stanze da letto o numero locali ?
+  //   autore: "", // privato o agenzia ?
+  //   date: {
+  //     // data dell'annuncio
+  //     from: "",
+  //     to: "",
+  //   },
+  //   mq: {
+  //     // metri quadri
+  //     from: "",
+  //     to: "",
+  //   },
+  //   mqPrice: {
+  //     // metri quadri
+  //     from: "",
+  //     to: "",
+  //   },
+  // });
 
   // Funzione per gestire i cambiamenti nelle opzioni di filtro
   const handleFilterChange = (e) => {
@@ -46,16 +57,18 @@ function Filter({
       [name]: value,
     });
 
-    searchParams.set("city", filterOptions.city);
-    searchParams.set("type", filterOptions.type);
-    searchParams.set("property", filterOptions.property);
-    searchParams.set("minPrice", filterOptions.minPrice);
-    searchParams.set("maxPrice", filterOptions.maxPrice);
-    searchParams.set("bedroom", filterOptions.bedroom);
-    searchParams.set("page", page);
+    // searchParams.set("city", filterOptions.city);
+    // searchParams.set("type", filterOptions.type);
+    // searchParams.set("property", filterOptions.property);
+    // searchParams.set("minPrice", filterOptions.minPrice);
+    // searchParams.set("maxPrice", filterOptions.maxPrice);
+    // searchParams.set("bedroom", filterOptions.bedroom);
+    // searchParams.set("page", page);
 
-    console.log(filterOptions);
+    console.log("filterOptions: ", filterOptions);
   };
+
+  console.log("filterOptions: ", filterOptions);
 
   // Funzione per gestire la sottomissione del filtro
   const handleSubmit = async (e) => {
@@ -108,16 +121,32 @@ function Filter({
           <div className="item">
             <label htmlFor="property">Property</label>
             <select
-              name="property"
+              name="property" // case-appartaemnti // property
+              id="property"
+              value={filterOptions.property}
+              onChange={handleFilterChange}
+            >
+              <option value="">Tutte le tipologie</option>
+              <option value="apartment">Appartamento</option>
+              <option value="house">Attico</option>
+              <option value="condo">Casa indipendente</option>
+              <option value="land">Loft</option>
+              <option value="land">Rustico - Casale</option>
+              <option value="land">Villa</option>
+              <option value="land">Villetta a schiera</option>
+            </select>
+          </div>
+          <div className="item">
+            <label htmlFor="property">Property-type</label>
+            <select
+              name="property-type" // case-appartaemnti // property
               id="property"
               value={filterOptions.property}
               onChange={handleFilterChange}
             >
               <option value="">any</option>
-              <option value="apartment">Apartment</option>
-              <option value="house">House</option>
-              <option value="condo">Condo</option>
-              <option value="land">Land</option>
+              <option value="apartment">Appartamento</option>
+              <option value="apartment">Nuove costruzioni</option>
             </select>
           </div>
           <div className="item">
@@ -127,32 +156,103 @@ function Filter({
               id="minPrice"
               name="minPrice"
               placeholder="any"
-              value={filterOptions.minPrice}
+              value={filterOptions.price.minPrice}
               onChange={handleFilterChange}
             />
           </div>
           <div className="item">
             <label htmlFor="maxPrice">Max Price</label>
             <input
-              type="text"
+              type="number"
               id="maxPrice"
               name="maxPrice"
               placeholder="any"
-              value={filterOptions.maxPrice}
+              value={filterOptions.price.maxPrice}
               onChange={handleFilterChange}
             />
           </div>
           <div className="item">
-            <label htmlFor="bedroom">Bedroom</label>
+            <label htmlFor="fromDate">From Date</label>
             <input
-              type="text"
-              id="bedroom"
-              name="bedroom"
+              type="date"
+              id="fromDate"
+              name="fromDate"
               placeholder="any"
-              value={filterOptions.bedroom}
+              value={filterOptions.date.from}
               onChange={handleFilterChange}
             />
           </div>
+          <div className="item">
+            <label htmlFor="toDate">To Date</label>
+            <input
+              type="date"
+              id="toDate"
+              name="toDate"
+              placeholder="any"
+              value={filterOptions.date.to}
+              onChange={handleFilterChange}
+            />
+          </div>
+
+          <div className="item">
+            <label htmlFor="mq_from">mq_from</label>
+            <input
+              type="number"
+              id="mq_from"
+              name="mq_from"
+              placeholder="any"
+              value={filterOptions.mq.from}
+              onChange={handleFilterChange}
+            />
+          </div>
+          <div className="item">
+            <label htmlFor="mq_to">mq_to</label>
+            <input
+              type="number"
+              id="mq_to"
+              name="mq_to"
+              placeholder="any"
+              value={filterOptions.mq.to}
+              onChange={handleFilterChange}
+            />
+          </div>
+
+          <div className="item">
+            <label htmlFor="mq_price_from">mq_price_from</label>
+            <input
+              type="number"
+              id="mq_price_from"
+              name="mq_price_from"
+              placeholder="any"
+              value={filterOptions.mqPrice.from}
+              onChange={handleFilterChange}
+            />
+          </div>
+          <div className="item">
+            <label htmlFor="mq_price_to">mq_price_to</label>
+            <input
+              type="number"
+              id="mq_price_to"
+              name="mq_price_to"
+              placeholder="any"
+              value={filterOptions.mqPrice.to}
+              onChange={handleFilterChange}
+            />
+          </div>
+
+          <div className="item">
+            {/* //Bedroom */}
+            <label htmlFor="rooms">Locali</label>
+            <input
+              type="number"
+              id="rooms"
+              name="rooms"
+              placeholder="any"
+              value={filterOptions.rooms}
+              onChange={handleFilterChange}
+            />
+          </div>
+
           <button type="submit">
             <img src="/search.png" alt="" />
           </button>
