@@ -16,6 +16,7 @@ export const getRealEstateDataAPI = async (page) => {
     const response = await axios.get("http://localhost:8080/real-estate/list", {
       params: { page: page },
     });
+    console.log("realEstate - default: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -31,6 +32,8 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
   south
 ) => {
   try {
+    const body = { west, east, north, south };
+
     console.log(
       "url: ",
       "http://localhost:8080/real-estate/boundingBox",
@@ -39,12 +42,12 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
       "body",
       body
     );
-    const body = { west, east, north, south };
     const response = await axios.post(
       "http://localhost:8080/real-estate/boundingBox",
       body,
       { params: { page: page } }
     );
+    console.log("realEstate - ByBoundaryBox: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -53,13 +56,14 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
 };
 
 export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
-  page,
   west,
   east,
   north,
   south
 ) => {
   try {
+    const body = { west, east, north, south };
+    const page = 1;
     console.log(
       "url: ",
       "http://localhost:8080/real-estate/boundingBox",
@@ -68,12 +72,12 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
       "body",
       body
     );
-    const body = { west, east, north, south };
     const response = await axios.post(
       "http://localhost:8080/real-estate/locationsByBoundingBox",
       body,
       { params: { page: page } }
     );
+    console.log("Location - ByLocationName & ByBoundingBox: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);
@@ -82,6 +86,7 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
 };
 
 export const getAllRealEstatesLocationByLocationNameListAPI = async (
+  locationName,
   page,
   west,
   east,
@@ -90,15 +95,44 @@ export const getAllRealEstatesLocationByLocationNameListAPI = async (
 ) => {
   try {
     console.log(
-      "url: ",
+      "request_url: ",
       "http://localhost:8080/real-estate/locationsByName",
       " params: ",
-      { page: page, locationsByName: locationsByName }
+      { page: page, locationName: locationName }
     );
     const response = await axios.get(
       "http://localhost:8080/real-estate/locationsByName",
-      { params: { page: page } }
+      { params: { locationName: locationName, page: page } }
     );
+    console.log("Location - ByLocationName: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching real estate data:", error);
+    // throw error; // Rethrow the error to be handled elsewhere if needed
+  }
+};
+
+// getRealEstateDataByLocationNameAPI
+export const getRealEstateDataByLocationNameAPI = async (
+  locationName,
+  page,
+  west,
+  east,
+  north,
+  south
+) => {
+  try {
+    console.log(
+      "request_url: ",
+      "http://localhost:8080/real-estate/byName",
+      " params: ",
+      { page: page, locationName: locationName }
+    );
+    const response = await axios.get(
+      "http://localhost:8080/real-estate/byName",
+      { params: { locationName: locationName, page: page } }
+    );
+    console.log("Location - ByLocationName: ", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching real estate data:", error);

@@ -1,168 +1,177 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface PhoneNumber {
-    type: string;
-    value: string;
+  type: string;
+  value: string;
 }
 
 export interface ImageUrls {
-    small: string;
-    large: string;
+  small: string;
+  large: string;
 }
 
 export interface MultimediaPhoto {
-    id: number;
-    caption: string;
-    urls: {
-        small: string;
-    };
+  id: number;
+  caption: string;
+  urls: {
+    small: string;
+  };
 }
 
 export interface Agency {
-    id: number;
-    type: string;
-    showOnlyAgentPhone: boolean;
-    phones: PhoneNumber[];
-    bookableVisit: {
-        isVisitBookable: boolean;
-        virtualVisitEnabled: boolean;
-    };
-    isPaid: boolean;
-    label: string;
-    displayName: string;
-    guaranteed: boolean;
-    showAgentPhone: boolean;
-    showLogo: boolean;
-    imageUrls: ImageUrls;
-    agencyUrl: string;
+  id: number;
+  type: string;
+  showOnlyAgentPhone: boolean;
+  phones: PhoneNumber[];
+  bookableVisit: {
+    isVisitBookable: boolean;
+    virtualVisitEnabled: boolean;
+  };
+  isPaid: boolean;
+  label: string;
+  displayName: string;
+  guaranteed: boolean;
+  showAgentPhone: boolean;
+  showLogo: boolean;
+  imageUrls: ImageUrls;
+  agencyUrl: string;
 }
 
 export interface Supervisor {
-    type: string;
-    imageGender: string;
-    phones: PhoneNumber[];
-    imageType: string;
-    displayName: string;
-    label: string;
+  type: string;
+  imageGender: string;
+  phones: PhoneNumber[];
+  imageType: string;
+  displayName: string;
+  label: string;
 }
 
 export interface Advertiser {
-    agency: Agency;
-    supervisor: Supervisor;
-    hasCallNumbers: boolean;
+  agency: Agency;
+  supervisor: Supervisor;
+  hasCallNumbers: boolean;
 }
 
 export interface Price {
-    visible: boolean;
-    value: number;
-    formattedValue: string;
-    minValue: string;
-    maxValue: string;
-    mq_price: number;
+  visible: boolean;
+  value: number;
+  formattedValue: string;
+  minValue: string;
+  maxValue: string;
+  mq_price: number;
 }
 
 export interface Multimedia {
-    photos: MultimediaPhoto[];
-    virtualTours: any[]; // You can define a proper export interface if needed
-    hasMultimedia: boolean;
+  photos: MultimediaPhoto[];
+  virtualTours: any[]; // You can define a proper export interface if needed
+  hasMultimedia: boolean;
 }
 
 export interface Typology {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
 
 export interface Location {
-    latitude: number;
-    longitude: number;
-    marker: string;
-    region: string;
-    province: string;
-    macrozone: string;
-    microzone: string;
-    city: string;
-    nation: {
-        id: string;
-        name: string;
-        keyurl: string;
-    };
+  latitude: number;
+  longitude: number;
+  marker: string;
+  region: string;
+  province: string;
+  macrozone: string;
+  microzone: string;
+  city: string;
+  nation: {
+    id: string;
+    name: string;
+    keyurl: string;
+  };
 }
 
 export interface Feature {
-    type: string;
-    label: string;
-    compactLabel?: string;
+  type: string;
+  label: string;
+  compactLabel?: string;
 }
 
 export interface Property {
-    income: boolean;
-    multimedia: Multimedia;
-    floors: string;
-    price: Price;
-    surface: string;
-    surfaceValue: string;
-    typology: Typology;
-    typologyV2: Typology;
-    ga4Garage: string;
-    typologyGA4Translation: string;
-    ga4features: string[];
-    typologyAmount: number;
+  income: boolean;
+  multimedia: Multimedia;
+  floors: string;
+  price: Price;
+  surface: string;
+  surfaceValue: string;
+  typology: Typology;
+  typologyV2: Typology;
+  ga4Garage: string;
+  typologyGA4Translation: string;
+  ga4features: string[];
+  typologyAmount: number;
+  caption: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  description: string;
+  energy: {
+    zeroEnergyBuilding: boolean;
+    thermalInsulation: any; // Define a proper export interface if needed
+    emission: any; // Define a proper export interface if needed
+    heatingType: string;
+    airConditioning: string;
+    GA4Heating: string;
+  };
+  photo: {
+    id: number;
     caption: string;
-    category: {
-        id: number;
-        name: string;
+    urls: {
+      thumb: string;
+      small: string;
+      medium: string;
+      large: string;
     };
-    description: string;
-    energy: {
-        zeroEnergyBuilding: boolean;
-        thermalInsulation: any; // Define a proper export interface if needed
-        emission: any; // Define a proper export interface if needed
-        heatingType: string;
-        airConditioning: string;
-        GA4Heating: string;
-    };
-    photo: {
-        id: number;
-        caption: string;
-        urls: {
-            thumb: string;
-            small: string;
-            medium: string;
-            large: string;
-        };
-    };
-    location: Location;
-    featureList: Feature[];
-    rooms: string;
+  };
+  location: Location;
+  featureList: Feature[];
+  rooms: string;
 }
 
 export interface RealEstate extends Document {
-    dataType: string;
-    id: number;
-    uuid: string;
-    advertiser: Advertiser;
-    contract: string;
-    isNew: boolean;
-    luxury: boolean;
-    price: Price;
-    properties: Property[];
-    propertiesCount: number;
-    title: string;
+  dataType: string;
+  id: number;
+  uuid: string;
+  advertiser: Advertiser;
+  contract: string;
+  isNew: boolean;
+  luxury: boolean;
+  price: Price;
+  properties: Property[];
+  propertiesCount: number;
+  title: string;
+  type: string;
+  typology: Typology;
+  visibility: string;
+  hasMainProperty: boolean;
+  isProjectLike: boolean;
+  loc: {
     type: string;
-    typology: Typology;
-    visibility: string;
-    hasMainProperty: boolean;
-    isProjectLike: boolean;
-    loc: {
-        type: string;
-        coordinates: [number, number];
-    };
-    seo: {
-        anchor: String,
-        title: String,
-        metaTitle: String,
-        url: String,
-    }
+    coordinates: [number, number];
+  };
+  location: {
+    latitude: Number;
+    longitude: Number;
+    marker: String;
+    region: String;
+    province: String;
+    macrozone: String;
+    city: String;
+  };
+  seo: {
+    anchor: String;
+    title: String;
+    metaTitle: String;
+    url: String;
+  };
 }
 
 // const phoneNumberSchema = new Schema<PhoneNumber>({
