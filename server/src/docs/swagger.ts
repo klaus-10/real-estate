@@ -30,6 +30,7 @@ const outputFile = "./swagger_output.json";
 const endpointsFiles = [
   "./src/router/authentication.ts",
   "./src/router/users.ts",
+  "./src/router/realEstate.ts",
 ];
 
 swaggerAutogen({ openapi: "3.0.0" })(outputFile, endpointsFiles, doc);

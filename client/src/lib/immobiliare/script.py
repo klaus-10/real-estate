@@ -32,6 +32,10 @@ import time
 import pymongo
 from pymongo import MongoClient
 import math
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+import random
+
 
 # Define base URL and parameters
 base_url = "https://www.immobiliare.it/api-next/search-list/real-estates/"
@@ -49,14 +53,52 @@ params = {
 max_pages = 5728
 
 # Database connection (replace with your specific library and connection details)
-client = MongoClient("mongodb://root:password@localhost:27017/")
+client = MongoClient("mongodb://user:password@localhost:27017/")
 db = client["real-estate"]
-collection = db["immobiliare"]
+collection = db["realestates"]
 
 # Create an index on "location" with geospatial indexing for latitude and longitude
 # collection.create_index([("loc", pymongo.GEO2D)])
 
+def get_bounding_box(city_name):
+    # geolocator = Nominatim(user_agent="geoapiExercises")
+    geolocator = Nominatim(user_agent="Geolocation")
+    # print("geolocator ", geolocator)
+    
+    try:
+        location = geolocator.geocode(city_name)
+        
+        # print("location ", location)
+        
+        if location:
+            return location.raw['boundingbox']
+        else:
+            print(f"Could not find bounding box for {city_name}")
+            return None
+    except (GeocoderTimedOut, GeocoderServiceError) as e:
+        print(f"Error: {e}")
+        return None
+
+
+def generate_random_coordinates_within_city(city_name):
+    bounding_box = get_bounding_box(city_name)
+    # print("bounding_box ", bounding_box)
+    
+    if not bounding_box:
+        return None
+
+    min_lat, max_lat = float(bounding_box[0]), float(bounding_box[1])
+    min_lon, max_lon = float(bounding_box[2]), float(bounding_box[3])
+
+    random_lat = random.uniform(min_lat, max_lat)
+    random_lon = random.uniform(min_lon, max_lon)
+
+    return [random_lon, random_lat]
+
+print(generate_random_coordinates_within_city("Alserio"));
+
 for page in range(1, 15):
+    print("page ", page)
     params["pag"] = page
 
     # Make API call
@@ -70,22 +112,61 @@ for page in range(1, 15):
         # Extract results (assuming 'results' key holds the data)
         results = data.get("results", [])
         
-        print("count ")
-        print(len(results))
+        # print("count ")
+        # print(len(results))
 
         for res in results:
             # print(res)
-            res["realEstate"]["loc"] = { "type": "Point", "coordinates":[res["realEstate"]["properties"][0]["location"]["longitude"], res["realEstate"]["properties"][0]["location"]["latitude"]]}
+            # if [res["realEstate"]["properties"][0]["location"]["longitude"]] is not None:
+            #     res["realEstate"]["loc"] = { "type": "Point", "coordinates":[res["realEstate"]["properties"][0]["location"]["longitude"], res["realEstate"]["properties"][0]["location"]["latitude"]]}
+            # else:
+            #     res["realEstate"]["loc"] = { "type": "Point", "coordinates":generate_random_coordinates_within_city(res["realEstate"]["properties"][0]["location"]["city"])}
+            
+            if res["realEstate"]["properties"][0]["location"]["longitude"] is not None:
+                res["realEstate"]["loc"] = {
+                    "type": "Point",
+                    "coordinates": [
+                        res["realEstate"]["properties"][0]["location"]["longitude"],
+                        res["realEstate"]["properties"][0]["location"]["latitude"]
+                    ]
+                }
+            else:
+                random_coords = generate_random_coordinates_within_city(res["realEstate"]["properties"][0]["location"]["city"])
+                if random_coords:
+                    res["realEstate"]["loc"] = {
+                        "type": "Point",
+                        "coordinates": random_coords
+                    }
+                else:
+                    print("Failed to generate random coordinates.")
+                    
+                    
             res["realEstate"]["location"] = res["realEstate"]["properties"][0]["location"];
             
             try:
-                if len(res["realEstate"]["properties"]) != 0 and res["realEstate"]["properties"][0] is not None and res["realEstate"]["properties"][0]["surface"] is not None:
-                    print("surface")
+            #     if len(res["realEstate"]["properties"]) != 0 and res["realEstate"]["properties"][0] is not None and res["realEstate"]["properties"][0]["surface"] is not None:
+            #         # print("surface")
+            #         surface = res["realEstate"]["properties"][0]["surface"]
+            #         surface_val = int(surface.split(" ")[0])
+            #         # print("surface_val")
+            #         # print(surface_val)
+            #         res["realEstate"]["price"]["mq_price"] = math.ceil(res["realEstate"]["price"]["value"] / int(surface.split(" ")[0]))
+                if (
+                    "realEstate" in res and
+                    "properties" in res["realEstate"] and
+                    len(res["realEstate"]["properties"]) > 0 and
+                    res["realEstate"]["properties"][0] is not None and
+                    "surface" in res["realEstate"]["properties"][0] and
+                    res["realEstate"]["properties"][0]["surface"] is not None
+                ):
                     surface = res["realEstate"]["properties"][0]["surface"]
                     surface_val = int(surface.split(" ")[0])
-                    print("surface_val")
-                    print(surface_val)
-                    res["realEstate"]["price"]["mq_price"] = math.ceil(res["realEstate"]["price"]["value"] / int(surface.split(" ")[0]))
+
+                    res["realEstate"]["price"]["mq_price"] = math.ceil(res["realEstate"]["price"]["value"] / surface_val)
+                else:
+                    print(f"Missing or invalid surface information for property {res.get('realEstate', {}).get('id', 'unknown')}.")
+                    res["realEstate"]["price"]["mq_price"] = 0
+                    
             except (ValueError, KeyError):
                     print(f"Error processing property {res['realEstate']['id']}: invalid surface value or missing key.")
                     res["realEstate"]["price"]["mq_price"] = 0
@@ -108,41 +189,4 @@ print("Completed processing all pages.")
 
 
 
-# ---------------------------------------------
-# fetch("https://www.immobiliare.it/api-next/search-list/real-estates/?fkRegione=lom&idNazione=IT&idContratto=1&idCategoria=6&__lang=it&minLat=43.113014&maxLat=47.583937&minLng=7.77832&maxLng=11.079712&pag=1&paramsCount=4&path=%2Fnuove-costruzioni%2Flombardia%2F", {
-#   "headers": {
-#     "accept": "*/*",
-#     "accept-language": "en-US,en;q=0.6",
-#     "priority": "u=1, i",
-#     "sec-ch-ua": "\"Chromium\";v=\"124\", \"Brave\";v=\"124\", \"Not-A.Brand\";v=\"99\"",
-#     "sec-ch-ua-mobile": "?0",
-#     "sec-ch-ua-platform": "\"Windows\"",
-#     "sec-fetch-dest": "empty",
-#     "sec-fetch-mode": "cors",
-#     "sec-fetch-site": "same-origin",
-#     "sec-gpc": "1",
-#     "x-dtpc": "4$485839420_454h11vIJJSRIGLOUKQRQMPRPRLSKVMOACPEPFB-0e0",
-#     "cookie": "AWSALBTG=PqGL4xWm3jdSJ9eg1pzIR4vdsUdHEf5Hvi4GC1T2Fugs0DSJ4GSNmkTPJ0Jk+91+3QVjT9DfKItNbjdMICEHn5audCgbqUIWkQRxp1QiRHJLSvqt4z8TTC5qNNPiN0mK8jk5/q08WAp4M3E3fcmUPWjmH2Y/Osy3qlpyTKXE9xYw; AWSALB=ZWOS+K/1HTsWPhsOgZiGcicYNrrwypD324SjVDYo6BiLCGIETB1+Zc4Rx1rHKx8Xeqmr/RdsYxNriQTrP15ak3Bf/3cDfxC66gnZOqNCXnSZhCicJtVo2A91VjmA; dtCookie=v_4_srv_4_sn_CB2B981748F454234B0971A9CDA848C5_perc_100000_ol_0_mul_1_app-3Aea7c4b59f27d43eb_0; PHPSESSID=38416190b8d1b51552da3944b48bcf31",
-#     "Referer": "https://www.immobiliare.it/nuove-costruzioni/lombardia/?mapCenter=45.392664%2C9.429016&zoom=8",
-#     "Referrer-Policy": "unsafe-url"
-#   },
-#   "body": null,
-#   "method": "GET"
-# });
 
-# # nuove-costruzioni
-# curl ^"https://www.immobiliare.it/api-next/search-list/real-estates/?fkRegione=lom&idNazione=IT&idContratto=1&idCategoria=6&__lang=it&minLat=43.113014&maxLat=47.583937&minLng=7.77832&maxLng=11.079712&pag=1&paramsCount=4&path=^%^2Fnuove-costruzioni^%^2Flombardia^%^2F^" ^
-#   -H "accept: */*" ^
-#   -H "accept-language: en-US,en;q=0.6" ^
-#   -H "cookie: AWSALBTG=PqGL4xWm3jdSJ9eg1pzIR4vdsUdHEf5Hvi4GC1T2Fugs0DSJ4GSNmkTPJ0Jk+91+3QVjT9DfKItNbjdMICEHn5audCgbqUIWkQRxp1QiRHJLSvqt4z8TTC5qNNPiN0mK8jk5/q08WAp4M3E3fcmUPWjmH2Y/Osy3qlpyTKXE9xYw; AWSALB=ZWOS+K/1HTsWPhsOgZiGcicYNrrwypD324SjVDYo6BiLCGIETB1+Zc4Rx1rHKx8Xeqmr/RdsYxNriQTrP15ak3Bf/3cDfxC66gnZOqNCXnSZhCicJtVo2A91VjmA; dtCookie=v_4_srv_4_sn_CB2B981748F454234B0971A9CDA848C5_perc_100000_ol_0_mul_1_app-3Aea7c4b59f27d43eb_0; PHPSESSID=38416190b8d1b51552da3944b48bcf31" ^
-#   -H "priority: u=1, i" ^
-#   -H ^"referer: https://www.immobiliare.it/nuove-costruzioni/lombardia/?mapCenter=45.392664^%^2C9.429016&zoom=8^" ^
-#   -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"124^\^", ^\^"Brave^\^";v=^\^"124^\^", ^\^"Not-A.Brand^\^";v=^\^"99^\^"^" ^
-#   -H "sec-ch-ua-mobile: ?0" ^
-#   -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
-#   -H "sec-fetch-dest: empty" ^
-#   -H "sec-fetch-mode: cors" ^
-#   -H "sec-fetch-site: same-origin" ^
-#   -H "sec-gpc: 1" ^
-#   -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" ^
-#   -H ^"x-dtpc: 4^$485839420_454h11vIJJSRIGLOUKQRQMPRPRLSKVMOACPEPFB-0e0^"

@@ -6,23 +6,37 @@ import Pin from "../pin/Pin";
 import { useEffect, useState } from "react";
 import MapBoundingBox from "./map-components/BoundingBox";
 import SearchInMap from "./map-components/SearchInMap";
+import PinCircle from "../pin/PinCircle";
 
-function Map({ items, centerFromParent, handleIsMapSearch, isMapSearch }) {
+function Map({
+  items,
+  allRealStatesData,
+  centerFromParent,
+  handleIsMapSearch,
+  isMapSearch,
+  boundingBox,
+  setBoundingBox,
+}) {
   // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
 
-  const [boundingBox, setBoundingBox] = useState(null);
-
   const handleBoundingBoxChange = (newBoundingBox) => {
     setBoundingBox(newBoundingBox);
-    console.log("boundingBox: ", boundingBox);
   };
 
   useEffect(() => {
-    console.log("items: ", items);
+    console.log(
+      "real-estate base: ",
+      items && items.length,
+      " real-estate total: ",
+      allRealStatesData && allRealStatesData.length
+    );
   });
 
+  useEffect(() => {
+    console.log("DATA_LENGTH: ", items.length);
+  }, [items]);
   // TODO: add current location position
   return (
     <MapContainer
@@ -38,6 +52,10 @@ function Map({ items, centerFromParent, handleIsMapSearch, isMapSearch }) {
 
       {/* // map all the pins here */}
       {items && items.map((item) => <Pin item={item} key={item._id} />)}
+      {allRealStatesData &&
+        allRealStatesData.map((item) => (
+          <PinCircle item={item} key={item._id} />
+        ))}
 
       {/* // retrive current location for query? */}
       <div className="current_location_map">
@@ -49,7 +67,10 @@ function Map({ items, centerFromParent, handleIsMapSearch, isMapSearch }) {
 
       {/* Button to enable the map search */}
       {/* TODO: set isVisible */}
-      <SearchInMap isVisible={true} handleIsMapSearch={handleIsMapSearch} />
+      <SearchInMap
+        isVisible={isMapSearch}
+        handleIsMapSearch={handleIsMapSearch}
+      />
     </MapContainer>
   );
 }

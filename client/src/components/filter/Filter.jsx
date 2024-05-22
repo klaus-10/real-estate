@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
-
-function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
+function Filter({
+  handleSetData,
+  page,
+  handleSetTotalPages,
+  handleSearchIcon,
+}) {
   // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
   const [filterOptions, setFilterOptions] = useState({
     city: "", // locazione
@@ -16,15 +20,18 @@ function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
     rooms: 100000, // numero locali
     bedroom: "", // numero stanze da letto o numero locali ?
     autore: "", // privato o agenzia ?
-    date: { // data dell'annuncio
+    date: {
+      // data dell'annuncio
       from: "",
       to: "",
     },
-    mq: { // metri quadri
+    mq: {
+      // metri quadri
       from: "",
       to: "",
     },
-    mqPrice: { // metri quadri
+    mqPrice: {
+      // metri quadri
       from: "",
       to: "",
     },
@@ -38,6 +45,14 @@ function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
       ...filterOptions,
       [name]: value,
     });
+
+    searchParams.set("city", filterOptions.city);
+    searchParams.set("type", filterOptions.type);
+    searchParams.set("property", filterOptions.property);
+    searchParams.set("minPrice", filterOptions.minPrice);
+    searchParams.set("maxPrice", filterOptions.maxPrice);
+    searchParams.set("bedroom", filterOptions.bedroom);
+    searchParams.set("page", page);
 
     console.log(filterOptions);
   };

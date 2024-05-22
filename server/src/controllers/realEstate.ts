@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  getAllRealEstatesByLocationName,
   getAllRealEstatesLocationByLocationName,
   getAllRealEstatesLocationFromBoundingBox,
   getRealEstates,
@@ -20,6 +21,20 @@ export const getRealEstateList = async (
   req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
+  // #swagger.tags = ['realEstate']
+  // #swagger.summary = 'default get all api'
+  // #swagger.description = 'default get all api'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
+  /* #swagger.parameters['parameterName'] = {
+        in: <string>,                            
+        description: <string>,                   
+        required: <boolean>,                     
+        type: <string>,                          
+        format: <string>,                        
+        schema: <array>, <object> or <string>    
+} */
   try {
     const { page, limit, filter } = req.query;
 
@@ -43,12 +58,20 @@ export const getRealEstatesFromBoundingBoxList = async (
   >,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstate - FromBoundingBox'
+  // #swagger.description = 'RealEstate All - RealEstate - FromBoundingBox'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
   try {
+    console.log("body: ", req.body);
+    console.log("query: ", req.query);
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
     const boundingBox = req.body;
 
-    // console.log("boundingBox: ",boundingBox);
+    console.log("boundingBox: ", boundingBox);
 
     const realEstateList = await getRealEstatesFromBoundingBox(
       boundingBox,
@@ -56,6 +79,8 @@ export const getRealEstatesFromBoundingBoxList = async (
       25,
       filter
     );
+
+    // const realEstateList = ["a", "b"];
 
     // console.log("geoData: ", realEstateList.geodata);
 
@@ -78,16 +103,20 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   >,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstateLocations - FromBoundingBox'
+  // #swagger.description = 'RealEstate All - RealEstateLocations - FromBoundingBox'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
   try {
     const { page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
-    const boundingBox = req.body;
+    console.log("boundingBox: ", req.body);
 
-    // console.log("boundingBox: ",boundingBox);
+    const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
       boundingBox,
-      page,
       25,
       filter
     );
@@ -104,15 +133,50 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   }
 };
 
-export const getAllRealEstatesLocationByLocationNameList = async (
-  req: express.Request<
-    {},
-    {},
-    BoundingBoxRequest,
-    GetRealEstateListQueryParams
-  >,
+export const getAllRealEstatesByLocationNameList = async (
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate All - RealEstates - ByLocationName'
+  // #swagger.description = 'RealEstate All - RealEstates - ByLocationName'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
+
+  try {
+    const { locationName, page, limit, filter } = req.query;
+    // const { west, east, north, south } = req.body;
+
+    console.log("reury params: ", locationName, page, limit, filter);
+
+    const realEstateList = await getAllRealEstatesByLocationName(
+      locationName,
+      page,
+      25,
+      filter
+    );
+
+    console.log("realEstateList: ", realEstateList.total);
+
+    if (!realEstateList) {
+      return res.status(404).send("realEstateList not found");
+    }
+    return res.status(200).send(realEstateList);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const getAllRealEstatesLocationByLocationNameList = async (
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  res: express.Response
+) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate Location - ByLocationName'
+  // #swagger.description = 'RealEstate Location - ByLocationName'
+  // #swagger.deprecated = false
+  // #swagger.ignore = false
   try {
     const { locationName, page, limit, filter } = req.query;
     // const { west, east, north, south } = req.body;
@@ -126,7 +190,8 @@ export const getAllRealEstatesLocationByLocationNameList = async (
       filter
     );
 
-    // console.log("geoData: ", realEstateList.geodata);
+    console.log("query params: ", locationName, page, limit, filter);
+    console.log("DATA: ", realEstateList);
 
     if (!realEstateList) {
       return res.status(404).send("realEstateList not found");

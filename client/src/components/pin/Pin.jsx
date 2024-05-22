@@ -3,8 +3,6 @@ import "./pin.scss";
 import { Link } from "react-router-dom";
 
 function Pin({ item }) {
-  // console.log("item: ", item);
-  // console.log(item + " coordinate: " + item?.realEstate?.loc?.coordinates[1] + " - " + item?.realEstate?.loc?.coordinates[0]);
   return (
     <>
       {item?.realEstate?.loc && (
