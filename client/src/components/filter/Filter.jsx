@@ -2,15 +2,32 @@ import React, { useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
+
 function Filter({handleSetData, page, handleSetTotalPages, handleSearchIcon}) {
   // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
   const [filterOptions, setFilterOptions] = useState({
-    city: "",
-    type: "",
-    property: "",
-    minPrice: "",
-    maxPrice: "",
-    bedroom: "",
+    city: "", // locazione
+    type: "", // affitto, vendita, asta
+    property: "", // tipo di costruzione
+    price: {
+      min: "",
+      max: "",
+    },
+    rooms: 100000, // numero locali
+    bedroom: "", // numero stanze da letto o numero locali ?
+    autore: "", // privato o agenzia ?
+    date: { // data dell'annuncio
+      from: "",
+      to: "",
+    },
+    mq: { // metri quadri
+      from: "",
+      to: "",
+    },
+    mqPrice: { // metri quadri
+      from: "",
+      to: "",
+    },
   });
 
   // Funzione per gestire i cambiamenti nelle opzioni di filtro
