@@ -1,3 +1,5 @@
+
+
 import express from "express";
 
 import {
@@ -14,7 +16,6 @@ interface GetRealEstateListQueryParams {
   locationName?: string;
   page?: number;
   limit?: number;
-  filter?: any; // Replace with specific filter type if applicable
 }
 
 export const getRealEstateList = async (
@@ -68,7 +69,8 @@ export const getRealEstatesFromBoundingBoxList = async (
     console.log("body: ", req.body);
     console.log("query: ", req.query);
     const { page, limit, filter } = req.query;
-    // const { west, east, north, south } = req.body;
+    
+    console.log("BoundingBox&Filters: ", req.body);
     const boundingBox = req.body;
 
     console.log("boundingBox: ", boundingBox);
@@ -110,9 +112,8 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   // #swagger.ignore = false
   try {
     const { page, limit, filter } = req.query;
-    // const { west, east, north, south } = req.body;
-    console.log("boundingBox: ", req.body);
 
+    console.log("BoundingBox&Filters: ", req.body);
     const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
@@ -134,7 +135,7 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
 };
 
 export const getAllRealEstatesByLocationNameList = async (
-  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  req: express.Request<{}, {}, BoundingBoxRequest, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
   // #swagger.tags = ['RealEstate']
@@ -148,6 +149,8 @@ export const getAllRealEstatesByLocationNameList = async (
     // const { west, east, north, south } = req.body;
 
     console.log("reury params: ", locationName, page, limit, filter);
+    console.log("BoundingBox&Filters: ", req.body);
+    const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesByLocationName(
       locationName,
@@ -169,7 +172,7 @@ export const getAllRealEstatesByLocationNameList = async (
 };
 
 export const getAllRealEstatesLocationByLocationNameList = async (
-  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  req: express.Request<{}, {}, BoundingBoxRequest, GetRealEstateListQueryParams>,
   res: express.Response
 ) => {
   // #swagger.tags = ['RealEstate']
@@ -179,9 +182,9 @@ export const getAllRealEstatesLocationByLocationNameList = async (
   // #swagger.ignore = false
   try {
     const { locationName, page, limit, filter } = req.query;
-    // const { west, east, north, south } = req.body;
-
-    // console.log("boundingBox: ",boundingBox);
+    
+    console.log("BoundingBox&Filters: ", req.body);
+    const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationByLocationName(
       locationName,

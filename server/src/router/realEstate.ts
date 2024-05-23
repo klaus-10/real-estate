@@ -15,9 +15,9 @@ export default (router: express.Router) => {
     "/real-estate/locationsByBoundingBox",
     getAllRealEstatesLocationFromBoundingBoxList
   );
-  router.get(
+  router.post(
     "/real-estate/locationsByName",
     getAllRealEstatesLocationByLocationNameList
   );
-  router.get("/real-estate/byName", getAllRealEstatesByLocationNameList);
+  router.post("/real-estate/byName", getAllRealEstatesByLocationNameList);
 };
