@@ -10,6 +10,7 @@ import {
   getRealEstatesFromBoundingBox,
 } from "../db/realEstate";
 import { BoundingBoxRequest } from "interfaces/request";
+import { filterOptionsQueryTranformer } from "../utils/db";
 
 // Define the type of your query parameters
 interface GetRealEstateListQueryParams {
@@ -78,8 +79,8 @@ export const getRealEstatesFromBoundingBoxList = async (
     const realEstateList = await getRealEstatesFromBoundingBox(
       boundingBox,
       page,
-      25,
-      filter
+      25, 
+      filterOptionsQueryTranformer(filter)
     );
 
     // const realEstateList = ["a", "b"];
@@ -118,8 +119,8 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
 
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
       boundingBox,
-      25,
-      filter
+      25, 
+      filterOptionsQueryTranformer(filter)
     );
 
     // console.log("geoData: ", realEstateList.geodata);
@@ -155,8 +156,8 @@ export const getAllRealEstatesByLocationNameList = async (
     const realEstateList = await getAllRealEstatesByLocationName(
       locationName,
       page,
-      25,
-      filter
+      25, 
+      filterOptionsQueryTranformer(filter)
     );
 
     console.log("realEstateList: ", realEstateList.total);
@@ -189,8 +190,8 @@ export const getAllRealEstatesLocationByLocationNameList = async (
     const realEstateList = await getAllRealEstatesLocationByLocationName(
       locationName,
       page,
-      25,
-      filter
+      25, 
+      filterOptionsQueryTranformer(filter)
     );
 
     console.log("query params: ", locationName, page, limit, filter);
