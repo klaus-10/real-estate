@@ -161,7 +161,12 @@ function ListPage() {
       console.log("page: ", page);
       const repsonse = await getRealEstateDataByLocationNameAPI(
         filterOptions.city,
-        page
+        page,
+        null,
+        null,
+        null,
+        null,
+        filterOptions
       );
       console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
       handleSetData(repsonse?.data);
@@ -181,7 +186,8 @@ function ListPage() {
         boundingBox?.west,
         boundingBox?.east,
         boundingBox?.north,
-        boundingBox?.south
+        boundingBox?.south,
+        filterOptions
       );
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
@@ -221,7 +227,12 @@ function ListPage() {
       // TODO: handle isMapSearch or isSearchIcon
       const repsonse = await getAllRealEstatesLocationByLocationNameListAPI(
         filterOptions.city,
-        page
+        page,
+        null,
+        null,
+        null,
+        null,
+        filterOptions
       );
       console.log(
         "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
