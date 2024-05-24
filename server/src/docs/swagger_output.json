@@ -355,7 +355,7 @@
       }
     },
     "/real-estate/locationsByName": {
-      "get": {
+      "post": {
         "description": "",
         "responses": {
           "default": {
@@ -365,7 +365,7 @@
       }
     },
     "/real-estate/byName": {
-      "get": {
+      "post": {
         "description": "",
         "responses": {
           "default": {

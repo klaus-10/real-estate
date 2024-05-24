@@ -312,6 +312,7 @@ export const getRealEstatesFromBoundingBox = async (
           },
         },
       },
+      ...filter, // TODO: fix filter foreach endpoint
     };
 
     const pipeline = [
@@ -535,6 +536,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
           },
         },
       },
+      ...filter, // TODO: fix filter foreach endpoint
     };
 
     const pipeline = [
@@ -602,7 +604,7 @@ export const getAllRealEstatesLocationByLocationName = async (
         { "realEstate.location.region": locationName },
         { "realEstate.location.province": locationName },
       ],
-      ...filter, // Additional filtering
+      ...filter, // TODO: fix filter foreach endpoint
     };
 
     const projectionDetails = { "realEstate.loc": 1, _id: 0 };
@@ -699,7 +701,7 @@ export const getAllRealEstatesByLocationName = async (
         { "realEstate.location.region": locationName },
         { "realEstate.location.province": locationName },
       ],
-      ...filter, // Additional filtering
+      ...filter, // TODO: fix filter foreach endpoint
     };
 
     const pipeline = [

@@ -2,9 +2,10 @@ export interface FilterOptions {
   city: string;
   type: string; // affitto, vendita, asta
   property: string; // tipo di costruzione
+  isNew: string; // tipo di costruzione
   price: {
-    min: string;
-    max: string;
+    min: Number;
+    max: Number;
   };
   rooms: number; // numero stanze da letto o numero locali ?
   autore: string; // privato o agenzia ?
@@ -21,7 +22,6 @@ export interface FilterOptions {
     to: string;
   };
 }
-
 
 export interface BoundingBoxRequest {
   west?: number;
