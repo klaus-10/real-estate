@@ -68,7 +68,7 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
     const page = 1;
     console.log(
       "url: ",
-      "http://localhost:8080/real-estate/boundingBox",
+      "http://localhost:8080/real-estate/locationsByBoundingBox",
       " params: ",
       { page: page },
       "body",

@@ -138,7 +138,8 @@ function ListPage() {
         boundingBox?.west,
         boundingBox?.east,
         boundingBox?.north,
-        boundingBox?.south
+        boundingBox?.south,
+        filterOptions
       );
       console.log("ok");
 
@@ -154,7 +155,7 @@ function ListPage() {
       fetchAllRealEstateLocationDataByBoundaryBox();
       fetchDataFromMap();
     }
-  }, [boundingBox]);
+  }, [boundingBox, page]);
 
   const fetchRealEstateDataByName = async () => {
     try {

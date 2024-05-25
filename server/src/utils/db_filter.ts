@@ -99,8 +99,8 @@ export const filterOptionsQueryTransformer2 = (filters: FilterOptions): any => {
               value.from < value.to
             ) {
               query["realEstate.price.mqPrice"] = {
-                $gte: parseFloat(value.from),
-                $lte: parseFloat(value.to),
+                $gte: value.from,
+                $lte: value.to,
               };
             }
           }

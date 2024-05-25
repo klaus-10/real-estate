@@ -14,12 +14,12 @@ export interface FilterOptions {
     to: string;
   };
   mq: {
-    from: string;
-    to: string;
+    from: number;
+    to: number;
   };
   mqPrice: {
-    from: string;
-    to: string;
+    from: number;
+    to: number;
   };
 }
 
