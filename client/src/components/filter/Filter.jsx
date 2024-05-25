@@ -10,44 +10,6 @@ function Filter({
   filterOptions,
   setFilterOptions,
 }) {
-  // const [filterOptions, setFilterOptions] = useState({
-  //   city: "",
-  //   type: "",
-  //   property: "",
-  //   minPrice: "",
-  //   maxPrice: "",
-  //   bedroom: "",
-  // });
-
-  // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
-  // const [filterOptions, setFilterOptions] = useState({
-  //   city: "", // locazione
-  //   type: "", // affitto, vendita, asta
-  //   property: "", // tipo di costruzione
-  //   price: {
-  //     min: "",
-  //     max: "",
-  //   },
-  //   rooms: 100000, // numero locali
-  //   bedroom: "", // numero stanze da letto o numero locali ?
-  //   autore: "", // privato o agenzia ?
-  //   date: {
-  //     // data dell'annuncio
-  //     from: "",
-  //     to: "",
-  //   },
-  //   mq: {
-  //     // metri quadri
-  //     from: "",
-  //     to: "",
-  //   },
-  //   mqPrice: {
-  //     // metri quadri
-  //     from: "",
-  //     to: "",
-  //   },
-  // });
-
   // Funzione per gestire i cambiamenti nelle opzioni di filtro
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -139,14 +101,14 @@ function Filter({
           <div className="item">
             <label htmlFor="property">Property-type</label>
             <select
-              name="property-type" // case-appartaemnti // property
-              id="property"
-              value={filterOptions.property}
+              name="property_type" // case-appartaemnti // property
+              id="property_type"
+              value={filterOptions.isNew}
               onChange={handleFilterChange}
             >
               <option value="">any</option>
-              <option value="apartment">Appartamento</option>
-              <option value="apartment">Nuove costruzioni</option>
+              <option value="1">True</option>
+              <option value="0">False</option>
             </select>
           </div>
           <div className="item">

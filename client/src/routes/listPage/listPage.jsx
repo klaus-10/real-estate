@@ -37,11 +37,12 @@ function ListPage() {
     city: "", // locazione
     type: "", // affitto, vendita, asta
     property: "", // tipo di costruzione
+    isNew: "", // costruzione nuova o meno
     price: {
-      min: "",
-      max: "",
+      min: 0,
+      max: 0,
     },
-    rooms: -1, // numero stanze da letto o numero locali ?
+    rooms: 0, // numero stanze da letto o numero locali ?
     autore: "", // privato o agenzia ?
     date: {
       // data dell'annuncio
@@ -50,13 +51,13 @@ function ListPage() {
     },
     mq: {
       // metri quadri
-      from: "",
-      to: "",
+      from: 0,
+      to: 0,
     },
     mqPrice: {
       // metri quadri
-      from: "",
-      to: "",
+      from: 0,
+      to: 0,
     },
   });
 
@@ -146,7 +147,7 @@ function ListPage() {
     };
     const fetchDataFromMap = async () => {
       await fetchRealEstateDataByBoundaryBox();
-      scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
+      // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
     if (isMapSearch) {
