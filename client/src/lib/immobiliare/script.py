@@ -35,6 +35,7 @@ import math
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 import random
+from datetime import date
 
 
 # Define base URL and parameters
@@ -142,6 +143,8 @@ for page in range(1, 15):
                     
                     
             res["realEstate"]["location"] = res["realEstate"]["properties"][0]["location"];
+            
+            res["realEstate"]["date"] = date.today();
             
             try:
             #     if len(res["realEstate"]["properties"]) != 0 and res["realEstate"]["properties"][0] is not None and res["realEstate"]["properties"][0]["surface"] is not None:
