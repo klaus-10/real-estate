@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm run generate-swagger",
-    "generate-swagger": "del /f .\\src\\docs\\swagger_output.json && ts-node .\\src\\docs\\swagger.ts",
+    "generate-swagger": "rm -f ./src/docs/swagger_output.json && ts-node ./src/docs/swagger.ts",
     "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run generate-swagger && tsc && cp ./src/docs/swagger_output.json ./dist/docs/"

@@ -114,8 +114,8 @@ function Filter({
               onChange={handleFilterChange}
             >
               <option value="">any</option>
-              <option value="buy">Buy</option>
-              <option value="rent">Rent</option>
+              <option value="ad">Buy</option>
+              <option value="auction">Auction</option>
             </select>
           </div>
           <div className="item">
