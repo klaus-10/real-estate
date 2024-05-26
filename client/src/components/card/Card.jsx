@@ -85,7 +85,7 @@ function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
             </div>
             <div className="feature">
               <img src="/bath.png" alt="" />
-              <span>mqPrice: {item.realEstate?.price?.mq_price} €</span>
+              <span>mqPrice {item.realEstate?.price?.mq_price} €</span>
             </div>
           </div>
           <div className="icons">

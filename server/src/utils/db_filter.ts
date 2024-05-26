@@ -77,20 +77,20 @@ export const filterOptionsQueryTransformer2 = (filters: FilterOptions): any => {
         //     query.date = { $gte: fromDate, $lt: toDate };
         //   }
         //   break;
-        // case "mq": // TODO: check how to query this nested field
-        //   if (typeof value === "object" && "from" in value && "to" in value) {
-        //     if (
-        //       isValidValue(value.from) &&
-        //       isValidValue(value.to) &&
-        //       value.from < value.to
-        //     ) {
-        //       query["realEstate.properties.0.surface"] = {
-        //         $gte: parseInt(value.from),
-        //         $lte: parseInt(value.to),
-        //       };
-        //     }
-        //   }
-        //   break;
+        case "mq": // TODO: check how to query this nested field
+          if (typeof value === "object" && "from" in value && "to" in value) {
+            if (
+              isValidValue(value.from) &&
+              isValidValue(value.to) &&
+              value.from < value.to
+            ) {
+              query["realEstate.properties.0.surface"] = {
+                $gte: value.from + " m²",
+                $lte: value.to + " m²",
+              };
+            }
+          }
+          break;
         case "mqPrice":
           if (typeof value === "object" && "from" in value && "to" in value) {
             if (
@@ -98,7 +98,7 @@ export const filterOptionsQueryTransformer2 = (filters: FilterOptions): any => {
               isValidValue(value.to) &&
               value.from < value.to
             ) {
-              query["realEstate.price.mqPrice"] = {
+              query["realEstate.price.mq_price"] = {
                 $gte: value.from,
                 $lte: value.to,
               };

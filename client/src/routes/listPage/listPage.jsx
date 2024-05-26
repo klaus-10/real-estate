@@ -43,7 +43,7 @@ function ListPage() {
       min: 0,
       max: 0,
     },
-    rooms: 0, // numero stanze da letto o numero locali ?
+    rooms: "", // numero stanze da letto o numero locali ?
     autore: "", // privato o agenzia ?
     date: {
       // data dell'annuncio

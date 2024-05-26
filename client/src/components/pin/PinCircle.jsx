@@ -1,30 +1,3 @@
-// import { CircleMarker, Marker, Popup } from "react-leaflet";
-// import "./pinCircle.scss";
-// import { Link } from "react-router-dom";
-
-// function PinCircle({ item }) {
-//   // console.log("PinCircle_item: ", item);
-//   return (
-//     <>
-//       {item?.realEstate?.loc && (
-//         <CircleMarker
-//           radius={4}
-//           color="#03045E"
-//           fillColor="#03045E"
-//           // color="#FFFFFF"
-//           // fillOpacity={1}
-//           center={[
-//             item?.realEstate?.loc?.coordinates[1],
-//             item?.realEstate?.loc?.coordinates[0],
-//           ]}
-//         />
-//       )}
-//     </>
-//   );
-// }
-
-// export default PinCircle;
-
 import React, { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
@@ -51,12 +24,6 @@ const PinCircle = ({ items }) => {
           console.error("Invalid coordinates");
           return;
         }
-
-        // const marker = L.circleMarker([lat, lng], {
-        //   radius: 4,
-        //   color: "#03045E",
-        //   fillColor: "#03045E",
-        // }).addTo(map);
 
         const iconHtml = `
           <div style="
