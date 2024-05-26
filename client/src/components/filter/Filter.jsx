@@ -89,17 +89,28 @@ function Filter({
               onChange={handleFilterChange}
             >
               <option value="">Tutte le tipologie</option>
-              <option value="apartment">Appartamento</option>
-              <option value="house">Attico</option>
-              <option value="condo">Casa indipendente</option>
-              <option value="land">Loft</option>
-              <option value="land">Rustico - Casale</option>
-              <option value="land">Villa</option>
-              <option value="land">Villetta a schiera</option>
+              <option value="Appartamento">Appartamento</option>
+              <option value="Attico">Attico</option>
+              <option value="Casale">Casale</option>
+              <option value="Mansarda">Mansarda</option>
+              <option value="Palazzo - Edificio">Palazzo - Edificio</option>
+              <option value="Rustico">Rustico</option>
+              <option value="Stabile o palazzo">Stabile o palazzo</option>
+              <option value="Terratetto plurifamiliare">
+                Terratetto plurifamiliare
+              </option>
+              <option value="Terratetto unifamiliare">
+                Terratetto unifamiliare
+              </option>
+              <option value="Villa a schiera">Villa a schiera</option>
+              <option value="Villa bifamiliare">Villa bifamiliare</option>
+              <option value="Villa plurifamiliare">Villa plurifamiliare</option>
+              <option value="Villa unifamiliare">Villa unifamiliare</option>
             </select>
           </div>
+
           <div className="item">
-            <label htmlFor="property">Property-type</label>
+            <label htmlFor="property">Nuovi appartamenti</label>
             <select
               name="property_type" // case-appartaemnti // property
               id="property_type"
