@@ -1,17 +1,22 @@
-.popupContainer{
+.popupContainer {
   display: flex;
   gap: 20px;
 
-  img{
+  img {
     width: 64px;
     height: 48px;
     object-fit: cover;
     border-radius: 5px;
   }
 
-  .textContainer{
+  .textContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
+}
+
+.icon-inner img {
+  background: white;
+  border-radius: 50%;
 }

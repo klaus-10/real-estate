@@ -1,9 +1,19 @@
 import { Link } from "react-router-dom";
 import "./card.scss";
 
-function Card({ item }) {
+function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
+  // use "poiIconAnimation" to animate card
+
   return (
-    <div className="card">
+    <div
+      className="card"
+      onMouseOver={() => {
+        handlePoiMouseOver(item._id, "active");
+      }}
+      onMouseLeave={() => {
+        handlePoiMouseOver(item._id, "none");
+      }}
+    >
       {/* <a to={`${item && item.seo && item.seo.url}`} className="imageContainer"> */}
       <Link
         to={`${item && item.seo && item.seo.url}`}

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import MapBoundingBox from "./map-components/BoundingBox";
 import SearchInMap from "./map-components/SearchInMap";
 import PinCircle from "../pin/PinCircle";
+import DisplayPOI from "../pin/DisplayPoi";
 
 function Map({
   items,
@@ -16,6 +17,7 @@ function Map({
   isMapSearch,
   boundingBox,
   setBoundingBox,
+  poiIconAnimation,
 }) {
   // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
@@ -51,11 +53,17 @@ function Map({
       />
 
       {/* // map all the pins here */}
-      {items && items.map((item) => <Pin item={item} key={item._id} />)}
-      {allRealStatesData &&
+      {/* {items &&
+        items.map((item) => (
+          <Pin item={item} key={item._id} poiIconAnimation={poiIconAnimation} />
+        ))} */}
+      {items && <DisplayPOI poi={items} poiIconAnimation={poiIconAnimation} />}
+      {/* {allRealStatesData &&
         allRealStatesData.map((item) => (
           <PinCircle item={item} key={item._id} />
-        ))}
+        ))} */}
+
+      {allRealStatesData && <PinCircle items={allRealStatesData} />}
 
       {/* // retrive current location for query? */}
       <div className="current_location_map">

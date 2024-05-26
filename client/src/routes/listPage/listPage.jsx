@@ -24,15 +24,16 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
 
-  // // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
-  // const [filterOptions, setFilterOptions] = useState({
-  //   city: "",
-  //   type: "",
-  //   property: "",
-  //   minPrice: "",
-  //   maxPrice: "",
-  //   bedroom: "",
-  // });
+  // poi icon animation on mouseOver
+  const [poiIconAnimation, setPoiIconAnimation] = useState({});
+  const handlePoiMouseOver = (index, state) => {
+    // remove the class to all the markers
+
+    // add the animation class to the selected items
+
+    setPoiIconAnimation({ index: index, state: state });
+  };
+
   const [filterOptions, setFilterOptions] = useState({
     city: "", // locazione
     type: "", // affitto, vendita, asta
@@ -272,7 +273,14 @@ function ListPage() {
           <div className="list">
             {data &&
               Array.isArray(data) &&
-              data.map((item) => <Card key={item._id} item={item} />)}
+              data.map((item) => (
+                <Card
+                  key={item._id}
+                  item={item}
+                  poiIconAnimation={poiIconAnimation}
+                  handlePoiMouseOver={handlePoiMouseOver}
+                />
+              ))}
             <Page
               total={totalPages}
               handleSetPageNumber={handleSetPageNumber}
@@ -288,6 +296,7 @@ function ListPage() {
           boundingBox={boundingBox}
           setBoundingBox={setBoundingBox}
           allRealStatesData={allRealStatesData}
+          poiIconAnimation={poiIconAnimation}
         />
       </div>
     </div>

@@ -2,7 +2,18 @@ import { Marker, Popup } from "react-leaflet";
 import "./pin.scss";
 import { Link } from "react-router-dom";
 
-function Pin({ item }) {
+function Pin({ item, poiIconAnimation }) {
+  console.log(
+    "poiIconAnimation: ",
+    poiIconAnimation,
+    " - ",
+    item._id,
+    " - ",
+    poiIconAnimation.index === item._id
+  );
+
+  console.log(poiIconAnimation.state === "active" ? "animate" : "");
+
   return (
     <>
       {item?.realEstate?.loc && (
@@ -11,6 +22,12 @@ function Pin({ item }) {
             item?.realEstate?.loc?.coordinates[1],
             item?.realEstate?.loc?.coordinates[0],
           ]}
+          className={
+            poiIconAnimation.index === item._id &&
+            poiIconAnimation.state === "active"
+              ? "animate"
+              : ""
+          }
         >
           <Popup>
             <div className="popupContainer">
