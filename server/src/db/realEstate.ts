@@ -193,9 +193,6 @@ realEstateSchema.index({ loc: "2dsphere" });
 
 export const RealEstateModel = mongoose.model("RealEstate", realEstateSchema);
 
-// RealEstate Actions
-// export const getRealEstates = (page: number, limit: number, filter?: any) => RealEstateModel.find().skip(25 * page).limit(25);
-
 export const getRealEstates = async (
   page: number,
   limit: number,
@@ -213,73 +210,6 @@ export const getRealEstates = async (
   };
 };
 
-// export const getRealEstatesFromBoundingBox = async (
-//   boundingBox: BoundingBoxRequest,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const client = new MongoClient(process.env.MONGOURI);
-
-//   try {
-//     await client.connect();
-//     console.log("Connected successfully");
-
-//     const database = client.db("real-estate");
-//     const collection = database.collection("realestates");
-
-//     const query = {
-//       "realEstate.loc": {
-//         $geoWithin: {
-//           $geometry: {
-//             type: "Polygon",
-//             coordinates: [
-//               [
-//                 [boundingBox.west, boundingBox.south],
-//                 [boundingBox.east, boundingBox.south],
-//                 [boundingBox.east, boundingBox.north],
-//                 [boundingBox.west, boundingBox.north],
-//                 [boundingBox.west, boundingBox.south], // Closed loop
-//               ],
-//             ],
-//           },
-//         },
-//       },
-//     };
-
-//     const projectionDetails = {
-//       "realEstate.loc": 1,
-//       "realEstate.properties": { $slice: 1 },
-//       "seo.url": 1,
-//       "seo.title": 1,
-//       "realEstate.price.formattedValue": 1,
-//     };
-
-//     const total = await collection.countDocuments(query);
-
-//     const result = await collection
-//       .find(query)
-//       .project(projectionDetails)
-//       .skip(limit * (page - 1))
-//       .limit(limit)
-//       .toArray();
-
-//     if (result) {
-//       return {
-//         total: total,
-//         totalPages: Math.ceil(total / 25),
-//         data: result,
-//       };
-//     } else {
-//       console.log("Document not found");
-//     }
-//   } catch (e) {
-//     console.error("Error (getRealEstatesFromBoundingBox):", e);
-//   } finally {
-//     await client.close();
-//     console.log("Connection closed");
-//   }
-// };
 export const getRealEstatesFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
   page: number,
@@ -360,150 +290,6 @@ export const getRealEstatesFromBoundingBox = async (
     console.log("Connection closed");
   }
 };
-
-// export const getAllRealEstatesLocationFromBoundingBox = async (
-//   boundingBox: BoundingBoxRequest,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const client = new MongoClient(process.env.MONGOURI);
-
-//   try {
-//     await client.connect();
-//     console.log("Connected successfully");
-
-//     const database = client.db("real-estate");
-//     const collection = database.collection("realestates");
-//     const query = {
-//       "realEstate.loc": {
-//         $geoWithin: {
-//           $geometry: {
-//             type: "Polygon",
-//             coordinates: [
-//               [
-//                 [boundingBox.west, boundingBox.south],
-//                 [boundingBox.east, boundingBox.south],
-//                 [boundingBox.east, boundingBox.north],
-//                 [boundingBox.west, boundingBox.north],
-//                 [boundingBox.west, boundingBox.south],
-//               ],
-//             ],
-//           },
-//         },
-//       },
-//     };
-
-//     const projectionDetails = [
-//       {
-//         $project: {
-//           "realEstate.loc": 1,
-//         },
-//       },
-//     ];
-//     const total = await collection.countDocuments(query);
-
-//     const result = await collection
-//       .find(query)
-//       .project(projectionDetails)
-//       .toArray();
-
-//     if (result) {
-//       console.log("Retrieved document:", result);
-//       return {
-//         total: total,
-//         totalPages: Math.ceil(total / 25),
-//         data: result,
-//       };
-//     } else {
-//       console.log("Document not found");
-//     }
-//   } catch (e) {
-//     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
-//   } finally {
-//     await client.close();
-//     console.log("Connection closed");
-//   }
-// };
-
-// export const getAllRealEstatesLocationFromBoundingBox = async (
-//   boundingBox: BoundingBoxRequest,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const client = new MongoClient(process.env.MONGOURI);
-
-//   try {
-//     await client.connect();
-//     console.log("Connected successfully");
-
-//     const database = client.db("real-estate");
-//     const collection = database.collection("realestates");
-//     const query = {
-//       "realEstate.loc": {
-//         $geoWithin: {
-//           $geometry: {
-//             type: "Polygon",
-//             coordinates: [
-//               [
-//                 [boundingBox.west, boundingBox.south],
-//                 [boundingBox.east, boundingBox.south],
-//                 [boundingBox.east, boundingBox.north],
-//                 [boundingBox.west, boundingBox.north],
-//                 [boundingBox.west, boundingBox.south],
-//               ],
-//             ],
-//           },
-//         },
-//       },
-//     };
-
-//     const pipeline = [
-//       { $match: query },
-//       { $project: { "realEstate.loc": 1 } },
-//       { $skip: (page - 1) * limit },
-//       { $limit: limit },
-//       {
-//         $facet: {
-//           data: [
-//             {
-//               $project: {
-//                 "realEstate.loc": 1,
-//               },
-//             },
-//           ],
-//           totalCount: [{ $count: "count" }],
-//         },
-//       },
-//     ];
-
-//     const total = await collection.countDocuments(query);
-//     const result = await collection.aggregate(pipeline).next();
-
-//     if (result) {
-//       console.log(
-//         "Retrieved document:",
-//         " total ",
-//         total,
-//         " totalPages: ",
-//         Math.ceil(total / limit)
-//       );
-//       return {
-//         total: total,
-//         totalPages: Math.ceil(total / limit),
-//         data: result.data,
-//       };
-//     } else {
-//       console.log("Document not found");
-//     }
-//   } catch (e) {
-//     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
-//   } finally {
-//     await client.close();
-//     console.log("Connection closed");
-//   }
-// };
 
 export const getAllRealEstatesLocationFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
@@ -634,47 +420,6 @@ export const getAllRealEstatesLocationByLocationName = async (
   }
 };
 
-// export const getAllRealEstatesByLocationName = async (
-//   locationName: string,
-//   page: number,
-//   limit: number,
-//   filter?: any
-// ) => {
-//   const client = new MongoClient(process.env.MONGOURI);
-
-//   try {
-//     await client.connect();
-//     console.log("Connected successfully");
-
-//     const database = client.db("real-estate");
-//     const collection = database.collection("realestates");
-
-//     const query = {
-//       "realEstate.location.city": locationName,
-//       ...filter,
-//     };
-//     const total = await collection.countDocuments(query);
-
-//     const result = await collection.find(query).toArray();
-
-//     if (result) {
-//       console.log("Retrieved document:", result);
-//       return {
-//         total: total,
-//         totalPages: Math.ceil(total / 25),
-//         data: result,
-//       };
-//     } else {
-//       console.log("Document not found");
-//     }
-//   } catch (e) {
-//     console.error("Error (getAllRealEstatesByLocationName):", e);
-//   } finally {
-//     await client.close();
-//     console.log("Connection closed");
-//   }
-// };
-
 export const getAllRealEstatesByLocationName = async (
   locationName: string,
   page: number,
@@ -737,6 +482,62 @@ export const getAllRealEstatesByLocationName = async (
     }
   } catch (e) {
     console.error("Error (getAllRealEstatesByLocationName):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
+};
+
+// todo: cambiare il file di query visto che si sta interrogando una collection diversa?
+export const getRealEstateComuniSearch = async (locationName: string) => {
+  const client = new MongoClient(process.env.MONGOURI);
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+    const database = client.db("real-estate");
+    const collection = database.collection("comuni");
+
+    const projectionDetails = { properties: 1, id: 1, _id: 1 };
+
+    const result = await collection
+      .find({
+        "properties.COMUNE": { $regex: "^" + locationName + "", $options: "i" },
+      })
+      .project(projectionDetails)
+      .toArray();
+
+    if (result) {
+      console.log("Retrieved document:", result);
+      return result;
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getRealEstateComuniSearch):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
+};
+
+export const getRealEstateComuniById = async (id: string) => {
+  const client = new MongoClient(process.env.MONGOURI);
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+    const database = client.db("real-estate");
+    const collection = database.collection("comuni");
+
+    const result = await collection.findOne({ _id: new ObjectId(id) });
+
+    if (result) {
+      console.log("Retrieved document:", result);
+      return result;
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getRealEstateComuniSearch):", e);
   } finally {
     await client.close();
     console.log("Connection closed");
