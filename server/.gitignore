@@ -28,3 +28,7 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Windows: "generate-swagger": "del /f .\\src\\docs\\swagger_output.json && ts-node .\\src\\docs\\swagger.ts",
+# Linux:   "generate-swagger": "rm -f ./src/docs/swagger_output.json && ts-node ./src/docs/swagger.ts",
+ 

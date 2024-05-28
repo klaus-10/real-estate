@@ -29,10 +29,11 @@ export const getRealEstatesFromBoundingBoxListAPI = async (
   west,
   east,
   north,
-  south
+  south,
+  filter
 ) => {
   try {
-    const body = { west, east, north, south };
+    const body = { west, east, north, south, filter };
 
     console.log(
       "url: ",
@@ -59,14 +60,15 @@ export const getAllRealEstatesLocationFromBoundingBoxListAPI = async (
   west,
   east,
   north,
-  south
+  south,
+  filter
 ) => {
   try {
-    const body = { west, east, north, south };
+    const body = { west, east, north, south, filter };
     const page = 1;
     console.log(
       "url: ",
-      "http://localhost:8080/real-estate/boundingBox",
+      "http://localhost:8080/real-estate/locationsByBoundingBox",
       " params: ",
       { page: page },
       "body",
@@ -91,17 +93,21 @@ export const getAllRealEstatesLocationByLocationNameListAPI = async (
   west,
   east,
   north,
-  south
+  south,
+  filter
 ) => {
   try {
+    const body = { west, east, north, south, filter };
     console.log(
       "request_url: ",
       "http://localhost:8080/real-estate/locationsByName",
       " params: ",
+      body,
       { page: page, locationName: locationName }
     );
-    const response = await axios.get(
+    const response = await axios.post(
       "http://localhost:8080/real-estate/locationsByName",
+      body,
       { params: { locationName: locationName, page: page } }
     );
     console.log("Location - ByLocationName: ", response);
@@ -119,17 +125,22 @@ export const getRealEstateDataByLocationNameAPI = async (
   west,
   east,
   north,
-  south
+  south,
+  filter
 ) => {
   try {
+    const body = { west, east, north, south, filter };
     console.log(
       "request_url: ",
       "http://localhost:8080/real-estate/byName",
+      " body: ",
+      body,
       " params: ",
       { page: page, locationName: locationName }
     );
-    const response = await axios.get(
+    const response = await axios.post(
       "http://localhost:8080/real-estate/byName",
+      body,
       { params: { locationName: locationName, page: page } }
     );
     console.log("Location - ByLocationName: ", response);

@@ -12,7 +12,7 @@ import {
 import { scrollToToTopWithElemRef } from "../../utils/utils";
 import "./listPage.scss";
 import Map from "../../components/map/Map";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 function ListPage() {
   const wrapperRef = useRef(null);
@@ -24,14 +24,42 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
 
-  // Definisci lo stato iniziale dell'oggetto per salvare le scelte dell'utente
+  // poi icon animation on mouseOver
+  const [poiIconAnimation, setPoiIconAnimation] = useState({});
+  const handlePoiMouseOver = (index, state) => {
+    // remove the class to all the markers
+
+    // add the animation class to the selected items
+
+    setPoiIconAnimation({ index: index, state: state });
+  };
+
   const [filterOptions, setFilterOptions] = useState({
-    city: "",
-    type: "",
-    property: "",
-    minPrice: "",
-    maxPrice: "",
-    bedroom: "",
+    city: "", // locazione
+    type: "", // affitto, vendita, asta
+    property: "", // tipo di costruzione
+    isNew: "", // costruzione nuova o meno
+    price: {
+      min: 0,
+      max: 0,
+    },
+    rooms: "", // numero stanze da letto o numero locali ?
+    autore: "", // privato o agenzia ?
+    date: {
+      // data dell'annuncio
+      from: "",
+      to: "",
+    },
+    mq: {
+      // metri quadri
+      from: 0,
+      to: 0,
+    },
+    mqPrice: {
+      // metri quadri
+      from: 0,
+      to: 0,
+    },
   });
 
   // leaflet bounding box coordinates
@@ -111,7 +139,8 @@ function ListPage() {
         boundingBox?.west,
         boundingBox?.east,
         boundingBox?.north,
-        boundingBox?.south
+        boundingBox?.south,
+        filterOptions
       );
       console.log("ok");
 
@@ -120,14 +149,14 @@ function ListPage() {
     };
     const fetchDataFromMap = async () => {
       await fetchRealEstateDataByBoundaryBox();
-      scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
+      // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
     if (isMapSearch) {
       fetchAllRealEstateLocationDataByBoundaryBox();
       fetchDataFromMap();
     }
-  }, [boundingBox]);
+  }, [boundingBox, page]);
 
   const fetchRealEstateDataByName = async () => {
     try {
@@ -135,7 +164,12 @@ function ListPage() {
       console.log("page: ", page);
       const repsonse = await getRealEstateDataByLocationNameAPI(
         filterOptions.city,
-        page
+        page,
+        null,
+        null,
+        null,
+        null,
+        filterOptions
       );
       console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
       handleSetData(repsonse?.data);
@@ -155,7 +189,8 @@ function ListPage() {
         boundingBox?.west,
         boundingBox?.east,
         boundingBox?.north,
-        boundingBox?.south
+        boundingBox?.south,
+        filterOptions
       );
       console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
@@ -195,7 +230,12 @@ function ListPage() {
       // TODO: handle isMapSearch or isSearchIcon
       const repsonse = await getAllRealEstatesLocationByLocationNameListAPI(
         filterOptions.city,
-        page
+        page,
+        null,
+        null,
+        null,
+        null,
+        filterOptions
       );
       console.log(
         "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
@@ -233,7 +273,14 @@ function ListPage() {
           <div className="list">
             {data &&
               Array.isArray(data) &&
-              data.map((item) => <Card key={item._id} item={item} />)}
+              data.map((item) => (
+                <Card
+                  key={item._id}
+                  item={item}
+                  poiIconAnimation={poiIconAnimation}
+                  handlePoiMouseOver={handlePoiMouseOver}
+                />
+              ))}
             <Page
               total={totalPages}
               handleSetPageNumber={handleSetPageNumber}
@@ -249,6 +296,7 @@ function ListPage() {
           boundingBox={boundingBox}
           setBoundingBox={setBoundingBox}
           allRealStatesData={allRealStatesData}
+          poiIconAnimation={poiIconAnimation}
         />
       </div>
     </div>

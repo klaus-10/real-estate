@@ -1,9 +1,19 @@
 import { Link } from "react-router-dom";
 import "./card.scss";
 
-function Card({ item }) {
+function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
+  // use "poiIconAnimation" to animate card
+
   return (
-    <div className="card">
+    <div
+      className="card"
+      onMouseOver={() => {
+        handlePoiMouseOver(item._id, "active");
+      }}
+      onMouseLeave={() => {
+        handlePoiMouseOver(item._id, "none");
+      }}
+    >
       {/* <a to={`${item && item.seo && item.seo.url}`} className="imageContainer"> */}
       <Link
         to={`${item && item.seo && item.seo.url}`}
@@ -57,6 +67,25 @@ function Card({ item }) {
             <div className="feature">
               <img src="/bath.png" alt="" />
               <span>{item.realEstate?.properties[0]?.rooms} rooms</span>
+            </div>
+          </div>
+        </div>
+        <div className="bottom">
+          <div className="features">
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>
+                Elevator:{" "}
+                {item.realEstate?.properties[0]?.elevator ? "yes" : "no"}
+              </span>
+            </div>
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>{item.realEstate?.properties[0]?.surface}</span>
+            </div>
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>mqPrice {item.realEstate?.price?.mq_price} €</span>
             </div>
           </div>
           <div className="icons">
