@@ -65,11 +65,11 @@ export const getRealEstatesFromBoundingBoxList = async (
   // #swagger.ignore = false
 
   try {
-    console.log("body: ", req.body);
-    console.log("query: ", req.query);
+    // console.log("body: ", req.body);
+    // console.log("query: ", req.query);
     const { page, limit } = req.query;
 
-    console.log("Query params: ", req.query);
+    // console.log("Query params: ", req.query);
     const boundingBox = req.body;
 
     // console.log("boundingBox: ", boundingBox);
@@ -90,7 +90,7 @@ export const getRealEstatesFromBoundingBoxList = async (
     }
     return res.status(200).send(realEstateList);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -112,7 +112,7 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
   try {
     const { page, limit } = req.query;
 
-    console.log("BoundingBox&Filters: ", req.body);
+    // console.log("BoundingBox&Filters: ", req.body);
     const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
@@ -128,7 +128,7 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
     }
     return res.status(200).send(realEstateList);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -152,8 +152,8 @@ export const getAllRealEstatesByLocationNameList = async (
     const { locationName, page, limit } = req.query;
     // const { west, east, north, south } = req.body;
 
-    console.log("reury params: ", locationName, page, limit);
-    console.log("BoundingBox&Filters: ", req.body);
+    // console.log("reury params: ", locationName, page, limit);
+    // console.log("BoundingBox&Filters: ", req.body);
     const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesByLocationName(
@@ -163,14 +163,14 @@ export const getAllRealEstatesByLocationNameList = async (
       filterOptionsQueryTransformer2(boundingBox.filter)
     );
 
-    console.log("realEstateList: ", realEstateList.total);
+    // console.log("realEstateList: ", realEstateList.total);
 
     if (!realEstateList) {
       return res.status(404).send("realEstateList not found");
     }
     return res.status(200).send(realEstateList);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -192,7 +192,7 @@ export const getAllRealEstatesLocationByLocationNameList = async (
   try {
     const { locationName, page, limit } = req.query;
 
-    console.log("BoundingBox&Filters: ", req.body);
+    // console.log("BoundingBox&Filters: ", req.body);
     const boundingBox = req.body;
 
     const realEstateList = await getAllRealEstatesLocationByLocationName(
@@ -202,15 +202,15 @@ export const getAllRealEstatesLocationByLocationNameList = async (
       filterOptionsQueryTransformer2(boundingBox.filter)
     );
 
-    console.log("query params: ", locationName, page, limit);
-    console.log("DATA: ", realEstateList);
+    // console.log("query params: ", locationName, page, limit);
+    // console.log("DATA: ", realEstateList);
 
     if (!realEstateList) {
       return res.status(404).send("realEstateList not found");
     }
     return res.status(200).send(realEstateList);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };

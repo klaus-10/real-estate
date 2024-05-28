@@ -27,18 +27,18 @@ function Map({
     setBoundingBox(newBoundingBox);
   };
 
-  useEffect(() => {
-    console.log(
-      "real-estate base: ",
-      items && items.length,
-      " real-estate total: ",
-      allRealStatesData && allRealStatesData.length
-    );
-  });
+  // useEffect(() => {
+  //   console.log(
+  //     "real-estate base: ",
+  //     items && items.length,
+  //     " real-estate total: ",
+  //     allRealStatesData && allRealStatesData.length
+  //   );
+  // });
 
-  useEffect(() => {
-    console.log("DATA_LENGTH: ", items.length);
-  }, [items]);
+  // useEffect(() => {
+  //   console.log("DATA_LENGTH: ", items.length);
+  // }, [items]);
   // TODO: add current location position
   return (
     <MapContainer

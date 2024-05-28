@@ -16,7 +16,7 @@ export const getAllUsers = async (
 
     return res.status(200).json(users);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -38,7 +38,7 @@ export const deleteUser = async (
 
     return res.json(deletedUser);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -67,7 +67,7 @@ export const updateUser = async (
 
     return res.status(200).json(user).end();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };

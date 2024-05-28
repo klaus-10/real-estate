@@ -65,9 +65,9 @@ function ListPage() {
   // leaflet bounding box coordinates
   const [boundingBox, setBoundingBox] = useState(null);
 
-  useEffect(() => {
-    console.log("data: ", data);
-  });
+  // useEffect(() => {
+  //   console.log("data: ", data);
+  // });
 
   const handleSetData = (newData) => {
     setData(newData);
@@ -79,7 +79,7 @@ function ListPage() {
 
   const handleSetPageNumber = (pageNumber) => {
     setPage(pageNumber);
-    console.log("pageNum: ", pageNumber);
+    // console.log("pageNum: ", pageNumber);
   };
 
   const handleSearchIcon = (searchIconStatus) => {
@@ -91,19 +91,19 @@ function ListPage() {
   };
 
   const handleSetAllRealStatesData = (newAllData) => {
-    console.log("newAllData: ", newAllData);
+    // console.log("newAllData: ", newAllData);
     setAllRealStatesData([]);
     setAllRealStatesData(newAllData);
   };
 
-  useEffect(() => {
-    console.log("data: ", data);
+  // useEffect(() => {
+  //   console.log("data: ", data);
 
-    console.log("isMapSearch: ", isMapSearch);
-    console.log("searchIcon: ", searchIcon);
-    console.log("page: ", page);
-    console.log("totalPages: ", totalPages);
-  }, [searchIcon]);
+  //   console.log("isMapSearch: ", isMapSearch);
+  //   console.log("searchIcon: ", searchIcon);
+  //   console.log("page: ", page);
+  //   console.log("totalPages: ", totalPages);
+  // }, [searchIcon]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,7 +142,7 @@ function ListPage() {
         boundingBox?.south,
         filterOptions
       );
-      console.log("ok");
+      // console.log("ok");
 
       handleSetAllRealStatesData(repsonse?.data);
       // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
@@ -161,7 +161,7 @@ function ListPage() {
   const fetchRealEstateDataByName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");
-      console.log("page: ", page);
+      // console.log("page: ", page);
       const repsonse = await getRealEstateDataByLocationNameAPI(
         filterOptions.city,
         page,
@@ -171,7 +171,7 @@ function ListPage() {
         null,
         filterOptions
       );
-      console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
+      // console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
       handleSetData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
@@ -183,7 +183,7 @@ function ListPage() {
 
   const fetchRealEstateDataByBoundaryBox = async () => {
     try {
-      console.log("BoundaryBox Data");
+      // console.log("BoundaryBox Data");
       const repsonse = await getRealEstatesFromBoundingBoxListAPI(
         page,
         boundingBox?.west,
@@ -192,7 +192,7 @@ function ListPage() {
         boundingBox?.south,
         filterOptions
       );
-      console.log("repsonse: ", repsonse);
+      // console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
@@ -226,7 +226,7 @@ function ListPage() {
   const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");
-      console.log("BoundaryBox Data");
+      // console.log("BoundaryBox Data");
       // TODO: handle isMapSearch or isSearchIcon
       const repsonse = await getAllRealEstatesLocationByLocationNameListAPI(
         filterOptions.city,
@@ -237,10 +237,10 @@ function ListPage() {
         null,
         filterOptions
       );
-      console.log(
-        "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
-        repsonse
-      );
+      // console.log(
+      //   "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
+      //   repsonse
+      // );
       handleSetAllRealStatesData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);

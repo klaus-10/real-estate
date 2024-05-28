@@ -223,7 +223,7 @@ export const getRealEstates = async (
 
 //   try {
 //     await client.connect();
-//     console.log("Connected successfully");
+//     // console.log("Connected successfully");
 
 //     const database = client.db("real-estate");
 //     const collection = database.collection("realestates");
@@ -277,7 +277,7 @@ export const getRealEstates = async (
 //     console.error("Error (getRealEstatesFromBoundingBox):", e);
 //   } finally {
 //     await client.close();
-//     console.log("Connection closed");
+//     // console.log("Connection closed");
 //   }
 // };
 export const getRealEstatesFromBoundingBox = async (
@@ -290,7 +290,7 @@ export const getRealEstatesFromBoundingBox = async (
 
   try {
     await client.connect();
-    console.log("Connected successfully");
+    // console.log("Connected successfully");
 
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
@@ -357,7 +357,7 @@ export const getRealEstatesFromBoundingBox = async (
     console.error("Error (getRealEstatesFromBoundingBox):", e);
   } finally {
     await client.close();
-    console.log("Connection closed");
+    // console.log("Connection closed");
   }
 };
 
@@ -371,7 +371,7 @@ export const getRealEstatesFromBoundingBox = async (
 
 //   try {
 //     await client.connect();
-//     console.log("Connected successfully");
+//     // console.log("Connected successfully");
 
 //     const database = client.db("real-estate");
 //     const collection = database.collection("realestates");
@@ -422,7 +422,7 @@ export const getRealEstatesFromBoundingBox = async (
 //     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
 //   } finally {
 //     await client.close();
-//     console.log("Connection closed");
+//     // console.log("Connection closed");
 //   }
 // };
 
@@ -436,7 +436,7 @@ export const getRealEstatesFromBoundingBox = async (
 
 //   try {
 //     await client.connect();
-//     console.log("Connected successfully");
+//     // console.log("Connected successfully");
 
 //     const database = client.db("real-estate");
 //     const collection = database.collection("realestates");
@@ -501,7 +501,7 @@ export const getRealEstatesFromBoundingBox = async (
 //     console.error("Error (getAllRealEstatesLocationFromBoundingBox):", e);
 //   } finally {
 //     await client.close();
-//     console.log("Connection closed");
+//     // console.log("Connection closed");
 //   }
 // };
 
@@ -514,7 +514,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
 
   try {
     await client.connect();
-    console.log("Connected successfully");
+    // console.log("Connected successfully");
 
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
@@ -579,7 +579,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
     console.error("Error (getRealEstatesFromBoundingBox):", e);
   } finally {
     await client.close();
-    console.log("Connection closed");
+    // console.log("Connection closed");
   }
 };
 
@@ -593,7 +593,7 @@ export const getAllRealEstatesLocationByLocationName = async (
 
   try {
     await client.connect();
-    console.log("Connected successfully");
+    // console.log("Connected successfully");
 
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
@@ -630,7 +630,7 @@ export const getAllRealEstatesLocationByLocationName = async (
     console.error("Error (getAllRealEstatesLocationByLocationName):", e);
   } finally {
     await client.close();
-    console.log("Connection closed");
+    // console.log("Connection closed");
   }
 };
 
@@ -644,7 +644,7 @@ export const getAllRealEstatesLocationByLocationName = async (
 
 //   try {
 //     await client.connect();
-//     console.log("Connected successfully");
+//     // console.log("Connected successfully");
 
 //     const database = client.db("real-estate");
 //     const collection = database.collection("realestates");
@@ -671,7 +671,7 @@ export const getAllRealEstatesLocationByLocationName = async (
 //     console.error("Error (getAllRealEstatesByLocationName):", e);
 //   } finally {
 //     await client.close();
-//     console.log("Connection closed");
+//     // console.log("Connection closed");
 //   }
 // };
 
@@ -685,7 +685,7 @@ export const getAllRealEstatesByLocationName = async (
 
   try {
     await client.connect();
-    console.log("Connected successfully");
+    // console.log("Connected successfully");
 
     const database = client.db("real-estate");
     const collection = database.collection("realestates");
@@ -739,6 +739,6 @@ export const getAllRealEstatesByLocationName = async (
     console.error("Error (getAllRealEstatesByLocationName):", e);
   } finally {
     await client.close();
-    console.log("Connection closed");
+    // console.log("Connection closed");
   }
 };

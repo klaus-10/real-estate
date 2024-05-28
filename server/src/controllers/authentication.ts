@@ -59,8 +59,8 @@ export const login = async (req: express.Request, res: express.Response) => {
     const access_token = generateAccessToken({ username: user.username });
     const refresh_token = generateRefreshToken({ username: user.username });
 
-    console.log(access_token);
-    console.log(await verifyJwtToken(access_token));
+    // console.log(access_token);
+    // console.log(await verifyJwtToken(access_token));
     // res.cookie("auth_token", user.authentication.sessionToken, {
     //   domain: "localhost",
     //   path: "/",
@@ -70,7 +70,7 @@ export const login = async (req: express.Request, res: express.Response) => {
       .status(200)
       .send({ access_token: access_token, refresh_token: refresh_token });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -133,7 +133,7 @@ export const register = async (req: express.Request, res: express.Response) => {
 
     return res.status(200).send({ status: 200, message: "ok" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     // delete user
     await deleteUserByEmail(email);
@@ -198,7 +198,7 @@ export const resendRegisterEmail = async (
   //     .status(200)
   //     .send({ access_token: access_token, refresh_token: refresh_token });
   // } catch(error) {
-  //   console.log(error);
+  //   console.error(error);
   //   return res.sendStatus(500);
   // }
 };
@@ -232,7 +232,7 @@ export const askAssociationUserWithWindowsProfile = async (
     // send token to the user -> the token stored should be with the user to associate
     return res.status(200).send({ otp_token: token });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 };
@@ -281,7 +281,7 @@ export const associateUserWithWindowsProfile = async (
 
     return res.status(200).send({ status: 200, message: "ok" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send("Internal Server Error");
   }
 };
