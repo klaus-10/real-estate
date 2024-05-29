@@ -202,27 +202,6 @@ function ListPage() {
     }
   }; // fetchAllRealEstateDataByLocationName
 
-  // const fetchAllRealEstateDataByBoundaryBox = async () => {
-  //   try {
-  //     console.log("BoundaryBox Data");
-  //     // TODO: handle isMapSearch or isSearchIcon
-  //     const repsonse = await getAllRealEstatesLocationFromBoundingBoxListAPI(
-  //       page,
-  //       boundingBox?.west,
-  //       boundingBox?.east,
-  //       boundingBox?.north,
-  //       boundingBox?.south
-  //     );
-  //     console.log("repsonse fetchAllRealEstateDataByBoundaryBox: ", repsonse);
-  //     handleSetData(repsonse?.data);
-  //     handleSetTotalPages(repsonse?.totalPages);
-  //     scrollToToTopWithElemRef(wrapperRef);
-  //   } catch (error) {
-  //     // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
-  //     console.error("Errore durante il recupero dei dati:", error);
-  //   }
-  // };
-
   const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");

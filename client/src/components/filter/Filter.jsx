@@ -1,4 +1,8 @@
-// import React, { useState } from "react";
+// /**
+//  * TODO: set to the Filter component
+//  */
+
+// import React, { useEffect, useState } from "react";
 // import "./filter.scss";
 // import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
@@ -10,42 +14,93 @@
 //   filterOptions,
 //   setFilterOptions,
 // }) {
-//   // Funzione per gestire i cambiamenti nelle opzioni di filtro
-//   const handleFilterChange = (e) => {
-//     const { name, value } = e.target;
-//     // Aggiorna lo stato con la nuova scelta
-//     setFilterOptions({
-//       ...filterOptions,
-//       [name]: value,
-//     });
+//   // Function to handle changes in filter options
+//   const handleFilterChange = (e, comune) => {
+//     const { name, value, type } = e.target;
 
-//     // searchParams.set("city", filterOptions.city);
-//     // searchParams.set("type", filterOptions.type);
-//     // searchParams.set("property", filterOptions.property);
-//     // searchParams.set("minPrice", filterOptions.minPrice);
-//     // searchParams.set("maxPrice", filterOptions.maxPrice);
-//     // searchParams.set("bedroom", filterOptions.bedroom);
-//     // searchParams.set("page", page);
+//     // Check if the field is a nested property
+//     const nestedFields = [
+//       "price.min",
+//       "price.max",
+//       "date.from",
+//       "date.to",
+//       "mq.from",
+//       "mq.to",
+//       "mqPrice.from",
+//       "mqPrice.to",
+//     ];
+//     const isNested = nestedFields.includes(name);
+
+//     // Convert value to number if the input type is number and it's not a date field
+//     const convertedValue =
+//       type === "number" && !name.startsWith("date.")
+//         ? parseFloat(value)
+//         : value;
+
+//     // Update the state based on whether the field is nested or not
+//     if (isNested) {
+//       const [category, subName] = name.split(".");
+//       setFilterOptions((prevOptions) => ({
+//         ...prevOptions,
+//         [category]: {
+//           ...prevOptions[category],
+//           [subName]: convertedValue,
+//         },
+//       }));
+//     } else {
+//       setFilterOptions((prevOptions) => ({
+//         ...prevOptions,
+//         [name]: name === "rooms" ? value + "" : value,
+//       }));
+//     }
+
+//     if (comune != null && comune !== "") {
+//       console.log("comune: ", comune);
+//       setFilterOptions((prevOptions) => ({
+//         ...prevOptions,
+//         ["city"]: comune,
+//       }));
+//     }
 
 //     console.log("filterOptions: ", filterOptions);
 //   };
 
-//   console.log("filterOptions: ", filterOptions);
-
-//   // Funzione per gestire la sottomissione del filtro
+//   // Function to handle form submission
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
-//     // Puoi fare qualcosa con le opzioni di filtro qui, ad esempio inviarle al backend per ottenere i risultati corrispondenti
-//     // TODO: Api call to fetch data
-//     // make axios api request
 //     handleSearchIcon(true);
-//     // return;
-//     // const data = await getRealEstateDataAPI(page);
-//     // handleSetData(data?.data);
-//     // handleSetTotalPages(data?.total);
-
-//     // console.log(filterOptions);
+//     const data = await getRealEstateDataAPI(page, filterOptions);
+//     handleSetData(data?.data);
+//     handleSetTotalPages(data?.total);
 //   };
+
+//   // handle city suggestion
+//   const [cityTemp, setCityTemp] = useState("");
+//   const handleCityTemp = (e) => setCityTemp(e.target.value);
+//   const [citySuggestions, setCitySuggestions] = useState([]);
+//   const [isAutocomplete, setIsAutocomplete] = useState(false);
+//   const handleIsAutocomplete = (val) => setIsAutocomplete(val);
+
+//   useEffect(() => {
+//     const fetchLocations = async () => {
+//       // Make API call to retrieve locations
+//       const response = await fetch(
+//         `http://localhost:8080/real-estate/comuni/search/?locationName=${cityTemp}`
+//       );
+//       const data = await response.json();
+//       setCitySuggestions(data); // Assuming API returns an array of suggestions
+//     };
+
+//     const timeoutId = setTimeout(() => {
+//       if (cityTemp.trim() !== "") {
+//         fetchLocations();
+//       } else {
+//         setCitySuggestions([]);
+//       }
+//     }, 1000);
+
+//     return () => clearTimeout(timeoutId);
+//   }, [cityTemp]);
 
 //   return (
 //     <div className="filter">
@@ -62,8 +117,42 @@
 //               name="city"
 //               placeholder="City Location"
 //               value={filterOptions.city}
-//               onChange={handleFilterChange}
+//               onChange={(e) => {
+//                 handleIsAutocomplete(true);
+//                 handleFilterChange(e);
+//                 handleCityTemp(e);
+//               }}
 //             />
+//             {/* <ul className="autocomplete">
+//               {citySuggestions.map((location) => (
+//                 <li
+//                   key={location.id}
+//                   // value={location.properties?.COMUNE}
+//                   onClick={(e) =>
+//                     handleFilterChange(e, location.properties?.COMUNE)
+//                   }
+//                 >
+//                   {location.properties?.COMUNE}
+//                 </li>
+//               ))}
+//             </ul> */}
+
+//             {isAutocomplete && (
+//               <ul className="autocomplete">
+//                 {citySuggestions.map((location) => (
+//                   <li
+//                     key={location.id}
+//                     onClick={() => {
+//                       handleIsAutocomplete(false);
+//                       handleFilterChange(null, location.properties?.COMUNE);
+//                       handleCityTemp(location.properties?.COMUNE);
+//                     }}
+//                   >
+//                     {location.properties?.COMUNE}
+//                   </li>
+//                 ))}
+//               </ul>
+//             )}
 //           </div>
 //         </div>
 //         <div className="bottom">
@@ -83,7 +172,7 @@
 //           <div className="item">
 //             <label htmlFor="property">Property</label>
 //             <select
-//               name="property" // case-appartaemnti // property
+//               name="property"
 //               id="property"
 //               value={filterOptions.property}
 //               onChange={handleFilterChange}
@@ -108,12 +197,11 @@
 //               <option value="Villa unifamiliare">Villa unifamiliare</option>
 //             </select>
 //           </div>
-
 //           <div className="item">
-//             <label htmlFor="property">Nuovi appartamenti</label>
+//             <label htmlFor="isNew">Nuovi appartamenti</label>
 //             <select
-//               name="property_type" // case-appartaemnti // property
-//               id="property_type"
+//               name="isNew"
+//               id="isNew"
 //               value={filterOptions.isNew}
 //               onChange={handleFilterChange}
 //             >
@@ -123,98 +211,94 @@
 //             </select>
 //           </div>
 //           <div className="item">
-//             <label htmlFor="price">Min Price</label>
+//             <label htmlFor="price.min">Min Price</label>
 //             <input
 //               type="number"
-//               id="price"
-//               name="price"
+//               id="price.min"
+//               name="price.min"
 //               placeholder="any"
 //               value={filterOptions.price.min}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
 //           <div className="item">
-//             <label htmlFor="price">Max Price</label>
+//             <label htmlFor="price.max">Max Price</label>
 //             <input
 //               type="number"
-//               id="price"
-//               name="price"
+//               id="price.max"
+//               name="price.max"
 //               placeholder="any"
 //               value={filterOptions.price.max}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
 //           <div className="item">
-//             <label htmlFor="date">From Date</label>
+//             <label htmlFor="date.from">From Date</label>
 //             <input
 //               type="date"
-//               id="date"
-//               name="date"
+//               id="date.from"
+//               name="date.from"
 //               placeholder="any"
 //               value={filterOptions.date.from}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
 //           <div className="item">
-//             <label htmlFor="date">To Date</label>
+//             <label htmlFor="date.to">To Date</label>
 //             <input
 //               type="date"
-//               id="date"
-//               name="date"
+//               id="date.to"
+//               name="date.to"
 //               placeholder="any"
 //               value={filterOptions.date.to}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
-
 //           <div className="item">
-//             <label htmlFor="mq">mq_from</label>
+//             <label htmlFor="mq.from">mq_from</label>
 //             <input
 //               type="number"
-//               id="mq"
-//               name="mq"
+//               id="mq.from"
+//               name="mq.from"
 //               placeholder="any"
 //               value={filterOptions.mq.from}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
 //           <div className="item">
-//             <label htmlFor="mq">mq_to</label>
+//             <label htmlFor="mq.to">mq_to</label>
 //             <input
 //               type="number"
-//               id="mq"
-//               name="mq"
+//               id="mq.to"
+//               name="mq.to"
 //               placeholder="any"
 //               value={filterOptions.mq.to}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
-
 //           <div className="item">
-//             <label htmlFor="mqPrice">mq_price_from</label>
+//             <label htmlFor="mqPrice.from">mqPrice from</label>
 //             <input
 //               type="number"
-//               id="mqPrice"
-//               name="mqPrice"
+//               id="mqPrice.from"
+//               name="mqPrice.from"
 //               placeholder="any"
 //               value={filterOptions.mqPrice.from}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
 //           <div className="item">
-//             <label htmlFor="mqPrice">mq_price_to</label>
+//             <label htmlFor="mqPrice.to">mqPrice to</label>
 //             <input
 //               type="number"
-//               id="mqPrice"
-//               name="mqPrice"
+//               id="mqPrice.to"
+//               name="mqPrice.to"
 //               placeholder="any"
 //               value={filterOptions.mqPrice.to}
 //               onChange={handleFilterChange}
 //             />
 //           </div>
-
 //           <div className="item">
-//             {/* //Bedroom */}
 //             <label htmlFor="rooms">Locali</label>
 //             <input
 //               type="number"
@@ -225,7 +309,6 @@
 //               onChange={handleFilterChange}
 //             />
 //           </div>
-
 //           <button type="submit">
 //             <img src="/search.png" alt="" />
 //           </button>
@@ -237,7 +320,7 @@
 
 // export default Filter;
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
@@ -299,6 +382,44 @@ function Filter({
     const data = await getRealEstateDataAPI(page, filterOptions);
     handleSetData(data?.data);
     handleSetTotalPages(data?.total);
+    setCitySuggestions([]);
+  };
+
+  // handle city suggestion
+  const [cityTemp, setCityTemp] = useState("");
+  const handleCityTemp = (e) => setCityTemp(e.target.value);
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [isAutocomplete, setIsAutocomplete] = useState(false);
+  const handleIsAutocomplete = (val) => setIsAutocomplete(val);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      // Make API call to retrieve locations
+      const response = await fetch(
+        `http://localhost:8080/real-estate/comuni/search/?locationName=${cityTemp}`
+      );
+      const data = await response.json();
+      setCitySuggestions(data); // Assuming API returns an array of suggestions
+    };
+
+    const timeoutId = setTimeout(() => {
+      if (cityTemp.trim() !== "") {
+        fetchLocations();
+      } else {
+        setCitySuggestions([]);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [cityTemp]);
+
+  const handleCitySelection = (comune) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      city: comune,
+    }));
+    setCityTemp(comune);
+    setIsAutocomplete(false);
   };
 
   return (
@@ -316,8 +437,26 @@ function Filter({
               name="city"
               placeholder="City Location"
               value={filterOptions.city}
-              onChange={handleFilterChange}
+              onChange={(e) => {
+                handleIsAutocomplete(true);
+                handleFilterChange(e);
+                handleCityTemp(e);
+              }}
             />
+            {isAutocomplete && (
+              <ul className="autocomplete">
+                {citySuggestions.map((location) => (
+                  <li
+                    key={location.id}
+                    onClick={() =>
+                      handleCitySelection(location.properties?.COMUNE)
+                    }
+                  >
+                    {location.properties?.COMUNE}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
         <div className="bottom">
