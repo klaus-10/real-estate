@@ -36,6 +36,7 @@ function ListPage() {
 
   const [filterOptions, setFilterOptions] = useState({
     city: "", // locazione
+    cityId: -1,
     type: "", // affitto, vendita, asta
     property: "", // tipo di costruzione
     isNew: "", // costruzione nuova o meno
@@ -123,6 +124,13 @@ function ListPage() {
     fetchData();
   }, [searchIcon]);
 
+  // handle city displayed
+  useEffect(() => {
+    const getCityBoundaryBox = async () => {
+      const response = await getComuneById(filterOptions.cityId);
+    };
+  }, [filterOptions.cityId]);
+
   useEffect(() => {
     // todo: refract this use effect baseod on isMapSearch param
     const fetchDataFromSearchBar = async () => {
@@ -201,27 +209,6 @@ function ListPage() {
       console.error("Errore durante il recupero dei dati:", error);
     }
   }; // fetchAllRealEstateDataByLocationName
-
-  // const fetchAllRealEstateDataByBoundaryBox = async () => {
-  //   try {
-  //     console.log("BoundaryBox Data");
-  //     // TODO: handle isMapSearch or isSearchIcon
-  //     const repsonse = await getAllRealEstatesLocationFromBoundingBoxListAPI(
-  //       page,
-  //       boundingBox?.west,
-  //       boundingBox?.east,
-  //       boundingBox?.north,
-  //       boundingBox?.south
-  //     );
-  //     console.log("repsonse fetchAllRealEstateDataByBoundaryBox: ", repsonse);
-  //     handleSetData(repsonse?.data);
-  //     handleSetTotalPages(repsonse?.totalPages);
-  //     scrollToToTopWithElemRef(wrapperRef);
-  //   } catch (error) {
-  //     // Gestisci gli errori qui, ad esempio mostrando un messaggio all'utente
-  //     console.error("Errore durante il recupero dei dati:", error);
-  //   }
-  // };
 
   const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {

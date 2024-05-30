@@ -6,6 +6,8 @@ import {
   getAllRealEstatesLocationFromBoundingBox,
   getRealEstates,
   getRealEstatesFromBoundingBox,
+  getRealEstateComuniSearch,
+  getRealEstateComuniById,
 } from "../db/realEstate";
 import { BoundingBoxRequest } from "interfaces/request";
 import { filterOptionsQueryTransformer2 } from "../utils/db_filter";
@@ -211,6 +213,52 @@ export const getAllRealEstatesLocationByLocationNameList = async (
     return res.status(200).send(realEstateList);
   } catch (error) {
     console.log(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const getRealEstateComuniSearchList = async (
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  res: express.Response
+) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate Comuni - Search'
+
+  try {
+    const { locationName } = req.query;
+    const realEstateList = await getRealEstateComuniSearch(locationName);
+
+    if (!realEstateList) {
+      return res.status(404).send("realEstateList not found");
+    }
+
+    return res.status(200).send(realEstateList);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const getRealEstateComuniByIdList = async (
+  req: express.Request<{ id: string }, {}, {}, GetRealEstateListQueryParams>,
+  res: express.Response
+) => {
+  // #swagger.tags = ['RealEstate']
+  // #swagger.summary = 'RealEstate Comuni - Search'
+
+  try {
+    const { id } = req.params;
+    console.log("id: ", id);
+    const realEstateList = await getRealEstateComuniById(id);
+
+    console.log("ok");
+    if (!realEstateList) {
+      return res.status(404).send("realEstateList not found");
+    }
+
+    return res.status(200).send(realEstateList);
+  } catch (error) {
+    console.error(error);
     return res.sendStatus(500);
   }
 };

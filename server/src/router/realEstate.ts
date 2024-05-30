@@ -6,6 +6,8 @@ import {
   getAllRealEstatesLocationFromBoundingBoxList,
   getRealEstateList,
   getRealEstatesFromBoundingBoxList,
+  getRealEstateComuniSearchList,
+  getRealEstateComuniByIdList,
 } from "../controllers/realEstate";
 
 export default (router: express.Router) => {
@@ -20,4 +22,6 @@ export default (router: express.Router) => {
     getAllRealEstatesLocationByLocationNameList
   );
   router.post("/real-estate/byName", getAllRealEstatesByLocationNameList);
+  router.get("/real-estate/comuni/search", getRealEstateComuniSearchList);
+  router.get("/real-estate/comuni/search/:id", getRealEstateComuniByIdList);
 };

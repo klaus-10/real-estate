@@ -44,7 +44,7 @@ function Map({
     <MapContainer
       center={center}
       zoom={15}
-      scrollWheelZoom={false}
+      scrollWheelZoom={isMapSearch ? false : true}
       className="map"
     >
       <TileLayer

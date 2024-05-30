@@ -1,243 +1,4 @@
-// import React, { useState } from "react";
-// import "./filter.scss";
-// import { getRealEstateDataAPI } from "../../utils/searchAPI";
-
-// function Filter({
-//   handleSetData,
-//   page,
-//   handleSetTotalPages,
-//   handleSearchIcon,
-//   filterOptions,
-//   setFilterOptions,
-// }) {
-//   // Funzione per gestire i cambiamenti nelle opzioni di filtro
-//   const handleFilterChange = (e) => {
-//     const { name, value } = e.target;
-//     // Aggiorna lo stato con la nuova scelta
-//     setFilterOptions({
-//       ...filterOptions,
-//       [name]: value,
-//     });
-
-//     // searchParams.set("city", filterOptions.city);
-//     // searchParams.set("type", filterOptions.type);
-//     // searchParams.set("property", filterOptions.property);
-//     // searchParams.set("minPrice", filterOptions.minPrice);
-//     // searchParams.set("maxPrice", filterOptions.maxPrice);
-//     // searchParams.set("bedroom", filterOptions.bedroom);
-//     // searchParams.set("page", page);
-
-//     console.log("filterOptions: ", filterOptions);
-//   };
-
-//   console.log("filterOptions: ", filterOptions);
-
-//   // Funzione per gestire la sottomissione del filtro
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     // Puoi fare qualcosa con le opzioni di filtro qui, ad esempio inviarle al backend per ottenere i risultati corrispondenti
-//     // TODO: Api call to fetch data
-//     // make axios api request
-//     handleSearchIcon(true);
-//     // return;
-//     // const data = await getRealEstateDataAPI(page);
-//     // handleSetData(data?.data);
-//     // handleSetTotalPages(data?.total);
-
-//     // console.log(filterOptions);
-//   };
-
-//   return (
-//     <div className="filter">
-//       <h1>
-//         Search results for <b>London</b>
-//       </h1>
-//       <form onSubmit={handleSubmit}>
-//         <div className="top">
-//           <div className="item">
-//             <label htmlFor="city">Location</label>
-//             <input
-//               type="text"
-//               id="city"
-//               name="city"
-//               placeholder="City Location"
-//               value={filterOptions.city}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//         </div>
-//         <div className="bottom">
-//           <div className="item">
-//             <label htmlFor="type">Type</label>
-//             <select
-//               name="type"
-//               id="type"
-//               value={filterOptions.type}
-//               onChange={handleFilterChange}
-//             >
-//               <option value="">any</option>
-//               <option value="ad">Buy</option>
-//               <option value="auction">Auction</option>
-//             </select>
-//           </div>
-//           <div className="item">
-//             <label htmlFor="property">Property</label>
-//             <select
-//               name="property" // case-appartaemnti // property
-//               id="property"
-//               value={filterOptions.property}
-//               onChange={handleFilterChange}
-//             >
-//               <option value="">Tutte le tipologie</option>
-//               <option value="Appartamento">Appartamento</option>
-//               <option value="Attico">Attico</option>
-//               <option value="Casale">Casale</option>
-//               <option value="Mansarda">Mansarda</option>
-//               <option value="Palazzo - Edificio">Palazzo - Edificio</option>
-//               <option value="Rustico">Rustico</option>
-//               <option value="Stabile o palazzo">Stabile o palazzo</option>
-//               <option value="Terratetto plurifamiliare">
-//                 Terratetto plurifamiliare
-//               </option>
-//               <option value="Terratetto unifamiliare">
-//                 Terratetto unifamiliare
-//               </option>
-//               <option value="Villa a schiera">Villa a schiera</option>
-//               <option value="Villa bifamiliare">Villa bifamiliare</option>
-//               <option value="Villa plurifamiliare">Villa plurifamiliare</option>
-//               <option value="Villa unifamiliare">Villa unifamiliare</option>
-//             </select>
-//           </div>
-
-//           <div className="item">
-//             <label htmlFor="property">Nuovi appartamenti</label>
-//             <select
-//               name="property_type" // case-appartaemnti // property
-//               id="property_type"
-//               value={filterOptions.isNew}
-//               onChange={handleFilterChange}
-//             >
-//               <option value="">any</option>
-//               <option value="1">True</option>
-//               <option value="0">False</option>
-//             </select>
-//           </div>
-//           <div className="item">
-//             <label htmlFor="price">Min Price</label>
-//             <input
-//               type="number"
-//               id="price"
-//               name="price"
-//               placeholder="any"
-//               value={filterOptions.price.min}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//           <div className="item">
-//             <label htmlFor="price">Max Price</label>
-//             <input
-//               type="number"
-//               id="price"
-//               name="price"
-//               placeholder="any"
-//               value={filterOptions.price.max}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//           <div className="item">
-//             <label htmlFor="date">From Date</label>
-//             <input
-//               type="date"
-//               id="date"
-//               name="date"
-//               placeholder="any"
-//               value={filterOptions.date.from}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//           <div className="item">
-//             <label htmlFor="date">To Date</label>
-//             <input
-//               type="date"
-//               id="date"
-//               name="date"
-//               placeholder="any"
-//               value={filterOptions.date.to}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-
-//           <div className="item">
-//             <label htmlFor="mq">mq_from</label>
-//             <input
-//               type="number"
-//               id="mq"
-//               name="mq"
-//               placeholder="any"
-//               value={filterOptions.mq.from}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//           <div className="item">
-//             <label htmlFor="mq">mq_to</label>
-//             <input
-//               type="number"
-//               id="mq"
-//               name="mq"
-//               placeholder="any"
-//               value={filterOptions.mq.to}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-
-//           <div className="item">
-//             <label htmlFor="mqPrice">mq_price_from</label>
-//             <input
-//               type="number"
-//               id="mqPrice"
-//               name="mqPrice"
-//               placeholder="any"
-//               value={filterOptions.mqPrice.from}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-//           <div className="item">
-//             <label htmlFor="mqPrice">mq_price_to</label>
-//             <input
-//               type="number"
-//               id="mqPrice"
-//               name="mqPrice"
-//               placeholder="any"
-//               value={filterOptions.mqPrice.to}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-
-//           <div className="item">
-//             {/* //Bedroom */}
-//             <label htmlFor="rooms">Locali</label>
-//             <input
-//               type="number"
-//               id="rooms"
-//               name="rooms"
-//               placeholder="any"
-//               value={filterOptions.rooms}
-//               onChange={handleFilterChange}
-//             />
-//           </div>
-
-//           <button type="submit">
-//             <img src="/search.png" alt="" />
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default Filter;
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./filter.scss";
 import { getRealEstateDataAPI } from "../../utils/searchAPI";
 
@@ -295,10 +56,56 @@ function Filter({
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (filterOptions.city === "" || filterOptions.city === null) return;
     handleSearchIcon(true);
     const data = await getRealEstateDataAPI(page, filterOptions);
     handleSetData(data?.data);
     handleSetTotalPages(data?.total);
+    setCitySuggestions([]);
+  };
+
+  // handle city suggestion
+  const [cityTemp, setCityTemp] = useState("");
+  const handleCityTemp = (e) => setCityTemp(e.target.value);
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [isAutocomplete, setIsAutocomplete] = useState(false);
+  const handleIsAutocomplete = (val) => setIsAutocomplete(val);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      // Make API call to retrieve locations
+      const response = await fetch(
+        `http://localhost:8080/real-estate/comuni/search/?locationName=${cityTemp}`
+      );
+      const data = await response.json();
+      setCitySuggestions(data); // Assuming API returns an array of suggestions
+    };
+
+    const timeoutId = setTimeout(() => {
+      if (cityTemp.trim() !== "") {
+        fetchLocations();
+      } else {
+        setCitySuggestions([]);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [cityTemp]);
+
+  const handleCitySelection = (comune) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      city: comune,
+    }));
+    setCityTemp(comune);
+    setIsAutocomplete(false);
+  };
+
+  const handleCityIdSelection = (id) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      cityId: id,
+    }));
   };
 
   return (
@@ -310,14 +117,69 @@ function Filter({
         <div className="top">
           <div className="item">
             <label htmlFor="city">Location</label>
-            <input
+            {/* <input
               type="text"
               id="city"
               name="city"
               placeholder="City Location"
               value={filterOptions.city}
-              onChange={handleFilterChange}
-            />
+              onChange={(e) => {
+                handleIsAutocomplete(true);
+                handleFilterChange(e);
+                handleCityTemp(e);
+              }}
+            /> */}
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                placeholder="City Location"
+                value={filterOptions.city}
+                onChange={(e) => {
+                  handleIsAutocomplete(true);
+                  handleFilterChange(e);
+                  handleCityTemp(e);
+                }}
+              />
+              {filterOptions.city && (
+                <button
+                  type="button"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "5px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    backgroundColor: "transparent",
+                    border: "none",
+                  }}
+                  onClick={(e) => {
+                    // Clear logic
+                    handleCitySelection("");
+                    handleSubmit(e);
+                  }}
+                >
+                  <span>x</span>
+                </button>
+              )}
+            </div>
+
+            {isAutocomplete && (
+              <ul className="autocomplete">
+                {citySuggestions.map((location) => (
+                  <li
+                    key={location.id}
+                    onClick={() => {
+                      handleCitySelection(location.properties?.COMUNE);
+                      handleCityIdSelection(location.id);
+                    }}
+                  >
+                    {location.properties?.COMUNE}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
         <div className="bottom">

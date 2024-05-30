@@ -150,3 +150,16 @@ export const getRealEstateDataByLocationNameAPI = async (
     // throw error; // Rethrow the error to be handled elsewhere if needed
   }
 };
+
+export const getComuneByIdAPI = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/real-estate/comuni/search/${id}`
+    );
+    console.log("comune - id: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comuni:", error);
+    // throw error; // Rethrow the error to be handled elsewhere if needed
+  }
+};
