@@ -495,13 +495,13 @@ export const getRealEstateComuniSearch = async (locationName: string) => {
     await client.connect();
     console.log("Connected successfully");
     const database = client.db("real-estate");
-    const collection = database.collection("comuni");
+    const collection = database.collection("city");
 
-    const projectionDetails = { properties: 1, id: 1, _id: 1 };
+    const projectionDetails = { lat: 1, lon: 1, place_id: 1, _id: 1, name: 1 };
 
     const result = await collection
       .find({
-        "properties.COMUNE": { $regex: "^" + locationName + "", $options: "i" },
+        name: { $regex: "^" + locationName + "", $options: "i" },
       })
       .project(projectionDetails)
       .toArray();
@@ -526,7 +526,7 @@ export const getRealEstateComuniById = async (id: string) => {
     await client.connect();
     console.log("Connected successfully");
     const database = client.db("real-estate");
-    const collection = database.collection("comuni");
+    const collection = database.collection("city");
 
     const result = await collection.findOne({ _id: new ObjectId(id) });
 
