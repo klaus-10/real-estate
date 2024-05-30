@@ -171,11 +171,11 @@ function Filter({
                   <li
                     key={location.id}
                     onClick={() => {
-                      handleCitySelection(location.properties?.COMUNE);
-                      handleCityIdSelection(location.id);
+                      handleCitySelection(location.name);
+                      handleCityIdSelection(location._id);
                     }}
                   >
-                    {location.properties?.COMUNE}
+                    {location.name}
                   </li>
                 ))}
               </ul>
