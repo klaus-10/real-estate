@@ -36,6 +36,7 @@ function ListPage() {
 
   const [filterOptions, setFilterOptions] = useState({
     city: "", // locazione
+    cityId: -1,
     type: "", // affitto, vendita, asta
     property: "", // tipo di costruzione
     isNew: "", // costruzione nuova o meno
@@ -122,6 +123,13 @@ function ListPage() {
 
     fetchData();
   }, [searchIcon]);
+
+  // handle city displayed
+  useEffect(() => {
+    const getCityBoundaryBox = async () => {
+      const response = await getComuneById(filterOptions.cityId);
+    };
+  }, [filterOptions.cityId]);
 
   useEffect(() => {
     // todo: refract this use effect baseod on isMapSearch param
