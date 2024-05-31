@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import "./map.scss";
 import "leaflet/dist/leaflet.css";
 import CurrentLocation from "../current-location/CurrentLocation";
@@ -18,10 +18,13 @@ function Map({
   boundingBox,
   setBoundingBox,
   poiIconAnimation,
+  currentCityDisplayed,
+  filterOptions,
 }) {
   // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
   const [location, setLocation] = useState(null);
+  const [coordinates, setCoordinates] = useState(null);
 
   const handleBoundingBoxChange = (newBoundingBox) => {
     setBoundingBox(newBoundingBox);
@@ -40,6 +43,18 @@ function Map({
     console.log("DATA_LENGTH: ", items.length);
   }, [items]);
   // TODO: add current location position
+
+  const purpleOptions = { color: "purple" };
+  console.log("current_city_map: ", currentCityDisplayed);
+
+  useEffect(() => {
+    const tmpCoordinates = currentCityDisplayed?.geojson?.coordinates[0].map(
+      (coord) => [coord[1], coord[0]]
+    );
+    setCoordinates(tmpCoordinates);
+    console.log("coordinates: ", tmpCoordinates);
+  }, [currentCityDisplayed]);
+
   return (
     <MapContainer
       center={center}
@@ -79,6 +94,16 @@ function Map({
         isVisible={isMapSearch}
         handleIsMapSearch={handleIsMapSearch}
       />
+
+      {/* Current boundary box city displayed*/}
+      {currentCityDisplayed &&
+        // && !isMapSearch
+        filterOptions.city !== undefined &&
+        filterOptions.city != null &&
+        filterOptions.city != "" &&
+        coordinates && (
+          <Polygon pathOptions={purpleOptions} positions={coordinates} />
+        )}
     </MapContainer>
   );
 }
