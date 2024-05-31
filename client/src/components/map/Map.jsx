@@ -8,6 +8,7 @@ import MapBoundingBox from "./map-components/BoundingBox";
 import SearchInMap from "./map-components/SearchInMap";
 import PinCircle from "../pin/PinCircle";
 import DisplayPOI from "../pin/DisplayPoi";
+import CenterMap from "./map-components/CenterMap";
 
 function Map({
   items,
@@ -53,7 +54,22 @@ function Map({
     );
     setCoordinates(tmpCoordinates);
     console.log("coordinates: ", tmpCoordinates);
+
+    // change center of the map
+    let newCenter = [
+      parseFloat(currentCityDisplayed.lat),
+      parseFloat(currentCityDisplayed.lon),
+    ];
+
+    setCenter(newCenter);
+
+    // todo add navigate animation to react-leaflet map
   }, [currentCityDisplayed]);
+
+  // console.log("New center: ", [
+  //   parseFloat(currentCityDisplayed.lat),
+  //   parseFloat(currentCityDisplayed.lon),
+  // ]);
 
   return (
     <MapContainer
@@ -104,6 +120,8 @@ function Map({
         coordinates && (
           <Polygon pathOptions={purpleOptions} positions={coordinates} />
         )}
+
+      <CenterMap center={center} />
     </MapContainer>
   );
 }
