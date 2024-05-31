@@ -56,12 +56,14 @@ function Map({
     console.log("coordinates: ", tmpCoordinates);
 
     // change center of the map
-    let newCenter = [
-      parseFloat(currentCityDisplayed.lat),
-      parseFloat(currentCityDisplayed.lon),
-    ];
+    let lat = parseFloat(currentCityDisplayed?.lat);
+    let lon = parseFloat(currentCityDisplayed?.lon);
 
-    setCenter(newCenter);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      setCenter([lat, lon]);
+    } else {
+      console.error("Invalid lat/lon values: ", lat, lon);
+    }
 
     // todo add navigate animation to react-leaflet map
   }, [currentCityDisplayed]);
@@ -121,7 +123,7 @@ function Map({
           <Polygon pathOptions={purpleOptions} positions={coordinates} />
         )}
 
-      <CenterMap center={center} />
+      {center && <CenterMap center={center} />}
     </MapContainer>
   );
 }

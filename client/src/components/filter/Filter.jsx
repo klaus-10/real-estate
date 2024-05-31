@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./filter.scss";
-import { getRealEstateDataAPI } from "../../utils/searchAPI";
+import { getMacroAreaAPI, getRealEstateDataAPI } from "../../utils/searchAPI";
 
 function Filter({
   handleSetData,
@@ -108,6 +108,20 @@ function Filter({
     }));
   };
 
+  // retrive macroarea from current city
+  const [macroArea, setMacroArea] = useState({});
+  useEffect(() => {
+    // TODO: call to the database to retrive the macroarea items
+    const fetchMacroArea = async () => {
+      if (filterOptions.city === "") return;
+      const response = await getMacroAreaAPI(filterOptions.city);
+      console.log("macroarea: ", response);
+      setMacroArea(response);
+    };
+
+    fetchMacroArea();
+  }, [filterOptions.cityId]);
+
   return (
     <div className="filter">
       <h1>
@@ -179,6 +193,24 @@ function Filter({
                   </li>
                 ))}
               </ul>
+            )}
+            {macroArea !== null && (
+              <>
+                <label htmlFor="macroarea">Macroarea</label>
+                <select
+                  name="macroarea"
+                  id="macroarea"
+                  value={""}
+                  onChange={handleCitySelection}
+                >
+                  <option value="">Tutte le macroaree</option>
+                  {macroArea?.macrozones?.map((macroarea) => (
+                    <option key={macroarea.label} value={macroarea.label}>
+                      {macroarea.label}
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
           </div>
         </div>

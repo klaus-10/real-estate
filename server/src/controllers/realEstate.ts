@@ -8,6 +8,7 @@ import {
   getRealEstatesFromBoundingBox,
   getRealEstateComuniSearch,
   getRealEstateComuniById,
+  getMacroareaComuniByLocationName,
 } from "../db/realEstate";
 import { BoundingBoxRequest } from "interfaces/request";
 import { filterOptionsQueryTransformer2 } from "../utils/db_filter";
@@ -257,6 +258,26 @@ export const getRealEstateComuniByIdList = async (
     }
 
     return res.status(200).send(realEstateList);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const getMacroareaComuniByLocationNameList = async (
+  req: express.Request<{}, {}, {}, GetRealEstateListQueryParams>,
+  res: express.Response
+) => {
+  try {
+    const { locationName } = req.query;
+    const macroareaList = await getMacroareaComuniByLocationName(locationName);
+
+    console.log("INSIDE");
+    if (!macroareaList) {
+      return res.status(404).send("macroareaList not found");
+    }
+
+    return res.status(200).send(macroareaList);
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);

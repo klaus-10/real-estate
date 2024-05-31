@@ -393,6 +393,16 @@
           }
         }
       }
+    },
+    "/real-estate/comuni/macroarea/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
