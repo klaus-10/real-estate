@@ -163,3 +163,19 @@ export const getComuneByIdAPI = async (id) => {
     // throw error; // Rethrow the error to be handled elsewhere if needed
   }
 };
+
+export const getMacroAreaAPI = async (city) => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/real-estate/comuni/macroarea/",
+      {
+        params: { locationName: city },
+      }
+    );
+    console.log("macroarea - city: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching macroarea:", error);
+    // throw error; // Rethrow the error to be handled elsewhere if needed
+  }
+};

@@ -543,3 +543,29 @@ export const getRealEstateComuniById = async (id: string) => {
     console.log("Connection closed");
   }
 };
+
+export const getMacroareaComuniByLocationName = async (
+  locationName: string
+) => {
+  const client = new MongoClient(process.env.MONGOURI);
+  try {
+    await client.connect();
+    console.log("Connected successfully");
+    const database = client.db("real-estate");
+    const collection = database.collection("city_macrozone");
+
+    const result = await collection.findOne({ label: locationName });
+
+    if (result) {
+      console.log("Retrieved macroarea document:", result);
+      return result;
+    } else {
+      console.log("Document not found");
+    }
+  } catch (e) {
+    console.error("Error (getRealEstateComuniSearch):", e);
+  } finally {
+    await client.close();
+    console.log("Connection closed");
+  }
+};
