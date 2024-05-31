@@ -6,6 +6,7 @@ import { listData } from "../../lib/dummydata";
 import {
   getAllRealEstatesLocationByLocationNameListAPI,
   getAllRealEstatesLocationFromBoundingBoxListAPI,
+  getComuneByIdAPI,
   getRealEstateDataByLocationNameAPI,
   getRealEstatesFromBoundingBoxListAPI,
 } from "../../utils/searchAPI";
@@ -23,6 +24,7 @@ function ListPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
+  const [currentCityDisplayed, setCurrentCityDisplayed] = useState(null);
 
   // poi icon animation on mouseOver
   const [poiIconAnimation, setPoiIconAnimation] = useState({});
@@ -127,8 +129,12 @@ function ListPage() {
   // handle city displayed
   useEffect(() => {
     const getCityBoundaryBox = async () => {
-      const response = await getComuneById(filterOptions.cityId);
+      const response = await getComuneByIdAPI(filterOptions.cityId);
+      console.log("city_response: ", response);
+      setCurrentCityDisplayed(response);
     };
+
+    getCityBoundaryBox();
   }, [filterOptions.cityId]);
 
   useEffect(() => {
@@ -284,6 +290,8 @@ function ListPage() {
           setBoundingBox={setBoundingBox}
           allRealStatesData={allRealStatesData}
           poiIconAnimation={poiIconAnimation}
+          currentCityDisplayed={currentCityDisplayed}
+          filterOptions={filterOptions}
         />
       </div>
     </div>
