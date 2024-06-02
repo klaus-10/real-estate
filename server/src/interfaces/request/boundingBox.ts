@@ -1,4 +1,6 @@
 export interface FilterOptions {
+  macroarea: string;
+  microarea: string;
   city: string;
   type: string; // affitto, vendita, asta
   property: string; // tipo di costruzione

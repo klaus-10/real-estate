@@ -105,6 +105,16 @@ export const filterOptionsQueryTransformer2 = (filters: FilterOptions): any => {
             }
           }
           break;
+        case "macroarea":
+          if (typeof value === "string" && isValidValue(value)) {
+            query["realEstate.location.macrozone"] = value;
+          }
+          break;
+        case "microarea":
+          if (typeof value === "string" && isValidValue(value)) {
+            query["realEstate.location.microzone"] = value;
+          }
+          break;
         default:
           console.warn(`Ignoring unexpected filter key: ${key}`);
       }

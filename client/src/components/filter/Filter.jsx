@@ -101,6 +101,20 @@ function Filter({
     setIsAutocomplete(false);
   };
 
+  const handleMacroareaSelection = (label) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      macroarea: label,
+    }));
+  };
+
+  const handleMicroareaSelection = (e) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      microarea: e.target.value,
+    }));
+  };
+
   const handleCityIdSelection = (id) => {
     setFilterOptions((prevOptions) => ({
       ...prevOptions,
@@ -110,6 +124,8 @@ function Filter({
 
   // retrive macroarea from current city
   const [macroArea, setMacroArea] = useState({});
+  const [macroAreaSelected, setMacroAreaSelected] = useState("");
+
   useEffect(() => {
     // TODO: call to the database to retrive the macroarea items
     const fetchMacroArea = async () => {
@@ -121,6 +137,21 @@ function Filter({
 
     fetchMacroArea();
   }, [filterOptions.cityId]);
+
+  const handleMacroAreaSelected = (position) => {
+    setMacroAreaSelected(position);
+  };
+
+  // add orderBy poaams to filterOptions
+  const handleOrderBySelection = (selected) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      orderBy: selected.target.value,
+    }));
+  };
+
+  console.log("macroAreaSelected: ", macroAreaSelected);
+  console.log("filterOptions: ", filterOptions);
 
   return (
     <div className="filter">
@@ -194,24 +225,102 @@ function Filter({
                 ))}
               </ul>
             )}
-            {macroArea !== null && (
+            {/* {macroArea !== null && (
               <>
                 <label htmlFor="macroarea">Macroarea</label>
                 <select
                   name="macroarea"
                   id="macroarea"
                   value={""}
-                  onChange={handleCitySelection}
+                  onChange={(e) => {
+                    const selectedMacroarea = JSON.parse(e.target.value);
+                    handleMacroareaSelection(selectedMacroarea.label);
+                    handleMacroAreaSelected(selectedMacroarea.position);
+                  }}
                 >
                   <option value="">Tutte le macroaree</option>
-                  {macroArea?.macrozones?.map((macroarea) => (
-                    <option key={macroarea.label} value={macroarea.label}>
+                  {macroArea?.macrozones?.map((macroarea, pos) => (
+                    <option
+                      key={macroarea.label}
+                      value={JSON.stringify({
+                        label: macroarea.label,
+                        position: pos,
+                      })}
+                    >
+                      {macroarea.label}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )} */}
+
+            {macroArea !== null && (
+              <>
+                <label htmlFor="macroarea">Macroarea</label>
+                <select
+                  name="macroarea"
+                  id="macroarea"
+                  value={filterOptions?.macroArea}
+                  onChange={(e) => {
+                    const selectedOption = e.target.selectedOptions[0];
+                    const label = selectedOption.getAttribute("data-label");
+                    const position =
+                      selectedOption.getAttribute("data-position");
+                    handleMacroareaSelection(label);
+                    handleMacroAreaSelected(position);
+                  }}
+                >
+                  <option value="">Tutte le macroaree</option>
+                  {macroArea?.macrozones?.map((macroarea, pos) => (
+                    <option
+                      key={macroarea.label}
+                      value={macroarea.label}
+                      data-label={macroarea.label}
+                      data-position={pos}
+                    >
                       {macroarea.label}
                     </option>
                   ))}
                 </select>
               </>
             )}
+
+            {macroAreaSelected !== null && macroAreaSelected !== "" && (
+              <>
+                <label htmlFor="microarea">Microarea</label>
+                <select
+                  name="microarea"
+                  id="microarea"
+                  value={filterOptions?.microarea}
+                  onChange={handleMicroareaSelection}
+                >
+                  <option value="">Tutte le macroaree</option>
+                  {macroArea?.macrozones[
+                    parseInt(macroAreaSelected)
+                  ]?.children.map((microarea) => (
+                    <option key={microarea.label} value={microarea.label}>
+                      {microarea.label}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            <label htmlFor="orderBy">OrderBy</label>
+            <select
+              name="orderBy"
+              id="orderBy"
+              value={filterOptions.orderBy}
+              onChange={handleOrderBySelection}
+            >
+              <option value="Consigliati">Consigliati</option>
+              <option value="Prezzo up">Prezzo up</option>
+              <option value="Prezzo down">Prezzo down</option>
+              <option value="Metri quadri up">Metri quadri up</option>
+              <option value="Metri quadri down">Metri quadri down</option>
+              <option value="Più recente">Più recente</option>
+              <option value="Meno recente">Meno recente</option>
+            </select>
           </div>
         </div>
         <div className="bottom">
