@@ -37,6 +37,8 @@ function ListPage() {
   };
 
   const [filterOptions, setFilterOptions] = useState({
+    macroarea: "",
+    microarea: "",
     orderBy: "Consigliati",
     city: "", // locazione
     cityId: -1,
