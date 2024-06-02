@@ -12,6 +12,7 @@ import {
 } from "../db/realEstate";
 import { BoundingBoxRequest } from "interfaces/request";
 import { filterOptionsQueryTransformer2 } from "../utils/db_filter";
+import { sortOptionsQueryTransformer } from "../utils/db_sort";
 
 // Define the type of your query parameters
 interface GetRealEstateListQueryParams {
@@ -81,7 +82,8 @@ export const getRealEstatesFromBoundingBoxList = async (
       boundingBox,
       page,
       25,
-      filterOptionsQueryTransformer2(boundingBox?.filter)
+      filterOptionsQueryTransformer2(boundingBox?.filter),
+      sortOptionsQueryTransformer(boundingBox?.filter)
     );
 
     // const realEstateList = ["a", "b"];
@@ -121,7 +123,8 @@ export const getAllRealEstatesLocationFromBoundingBoxList = async (
     const realEstateList = await getAllRealEstatesLocationFromBoundingBox(
       boundingBox,
       25,
-      filterOptionsQueryTransformer2(boundingBox.filter)
+      filterOptionsQueryTransformer2(boundingBox.filter),
+      sortOptionsQueryTransformer(boundingBox.filter)
     );
 
     // console.log("geoData: ", realEstateList.geodata);
@@ -163,7 +166,8 @@ export const getAllRealEstatesByLocationNameList = async (
       locationName,
       page,
       25,
-      filterOptionsQueryTransformer2(boundingBox.filter)
+      filterOptionsQueryTransformer2(boundingBox.filter),
+      sortOptionsQueryTransformer(boundingBox.filter)
     );
 
     console.log("realEstateList: ", realEstateList.total);
@@ -202,7 +206,8 @@ export const getAllRealEstatesLocationByLocationNameList = async (
       locationName,
       page,
       25,
-      filterOptionsQueryTransformer2(boundingBox.filter)
+      filterOptionsQueryTransformer2(boundingBox.filter),
+      sortOptionsQueryTransformer(boundingBox.filter)
     );
 
     console.log("query params: ", locationName, page, limit);

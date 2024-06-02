@@ -106,12 +106,15 @@ function Filter({
       ...prevOptions,
       macroarea: label,
     }));
+    if (label === null) {
+      handleMicroareaSelection("");
+    }
   };
 
-  const handleMicroareaSelection = (e) => {
+  const handleMicroareaSelection = (value) => {
     setFilterOptions((prevOptions) => ({
       ...prevOptions,
-      microarea: e.target.value,
+      microarea: value,
     }));
   };
 
@@ -292,7 +295,7 @@ function Filter({
                   name="microarea"
                   id="microarea"
                   value={filterOptions?.microarea}
-                  onChange={handleMicroareaSelection}
+                  onChange={(e) => handleMicroareaSelection(e.target.value)}
                 >
                   <option value="">Tutte le macroaree</option>
                   {macroArea?.macrozones[

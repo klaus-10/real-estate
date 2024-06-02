@@ -16,6 +16,7 @@ import {
 import { BoundingBoxRequest } from "interfaces/request";
 import mongoose, { Schema } from "mongoose";
 import { MongoClient, ObjectId } from "mongodb";
+import { sortOptionsQueryTransformer } from "utils/db_sort";
 
 const phoneNumberSchema = new Schema<PhoneNumber>({
   type: String,
@@ -214,7 +215,8 @@ export const getRealEstatesFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
   page: number,
   limit: number,
-  filter?: any
+  filter?: any,
+  sort?: any
 ) => {
   const client = new MongoClient(process.env.MONGOURI);
 
@@ -247,6 +249,7 @@ export const getRealEstatesFromBoundingBox = async (
 
     const pipeline = [
       { $match: query },
+      { $sort: sort },
       {
         $facet: {
           data: [
@@ -269,6 +272,7 @@ export const getRealEstatesFromBoundingBox = async (
       },
     ];
 
+    console.log("pipeline - getRealEstatesFromBoundingBox: ", pipeline);
     const result = await collection.aggregate(pipeline).next();
 
     if (result) {
@@ -294,7 +298,8 @@ export const getRealEstatesFromBoundingBox = async (
 export const getAllRealEstatesLocationFromBoundingBox = async (
   boundingBox: BoundingBoxRequest,
   limit: number,
-  filter?: any
+  filter?: any,
+  sort?: any
 ) => {
   const client = new MongoClient(process.env.MONGOURI);
 
@@ -327,6 +332,7 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
 
     const pipeline = [
       { $match: query },
+      { $sort: sort },
       {
         $facet: {
           data: [
@@ -347,6 +353,10 @@ export const getAllRealEstatesLocationFromBoundingBox = async (
       },
     ];
 
+    console.log(
+      "pipeline - getAllRealEstatesLocationFromBoundingBox: ",
+      pipeline
+    );
     const result = await collection.aggregate(pipeline).next();
 
     if (result) {
@@ -373,7 +383,8 @@ export const getAllRealEstatesLocationByLocationName = async (
   locationName: string,
   page: number,
   limit: number,
-  filter?: any
+  filter?: any,
+  sort?: any
 ) => {
   const client = new MongoClient(process.env.MONGOURI);
 
@@ -397,10 +408,24 @@ export const getAllRealEstatesLocationByLocationName = async (
 
     const total = await collection.countDocuments(query);
 
-    const result = await collection
-      .find(query)
-      .project(projectionDetails)
-      .toArray();
+    // const result = await collection
+    //   .find(query)
+    //   .project(projectionDetails)
+    //   .sort(sort)
+    //   .toArray();
+
+    const pipeline = [
+      { $match: query }, // Filter documents based on the query criteria
+      { $sort: sort },
+      { $project: projectionDetails }, // Project only desired fields
+    ];
+
+    console.log(
+      "pipeline - getAllRealEstatesLocationByLocationName: ",
+      pipeline
+    );
+
+    const result = await collection.aggregate(pipeline).toArray();
 
     if (result) {
       console.log("Retrieved document:", result);
@@ -424,7 +449,8 @@ export const getAllRealEstatesByLocationName = async (
   locationName: string,
   page: number,
   limit: number,
-  filter?: any
+  filter?: any,
+  sort?: any
 ) => {
   const client = new MongoClient(process.env.MONGOURI);
 
@@ -450,16 +476,24 @@ export const getAllRealEstatesByLocationName = async (
     };
 
     const pipeline = [
-      { $match: query },
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
+      { $match: query }, // Match documents based on the query
+      { $sort: sort }, // Sort documents according to the specified criteria
+      { $skip: (page - 1) * limit }, // Skip documents based on pagination
+      { $limit: limit }, // Limit the number of documents
       {
         $facet: {
-          data: [{ $project: { realEstate: 1, seo: 1, _id: 1 } }],
-          totalCount: [{ $count: "count" }],
+          data: [{ $project: { realEstate: 1, seo: 1, _id: 1 } }], // Perform facet operation on sorted data
+          totalCount: [{ $count: "count" }], // Calculate total count
         },
       },
     ];
+
+    // Handle optional sorting (consider using a dedicated sorting function)
+    // if (sort !== undefined && sort !== null && sort !== "") {
+    //   pipeline.push({ $sort: sort }); // Add sorting stage to the pipeline
+    // }
+
+    console.log("pipeline - getAllRealEstatesByLocationName: ", pipeline);
 
     const total = await collection.countDocuments(query);
     const result = await collection.aggregate(pipeline).next();

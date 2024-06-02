@@ -30,18 +30,18 @@ function Map({
   const handleBoundingBoxChange = (newBoundingBox) => {
     setBoundingBox(newBoundingBox);
   };
-
+  // Inside the Map component
   useEffect(() => {
     console.log(
       "real-estate base: ",
-      items && items.length,
+      items && items.length, // Add null check here
       " real-estate total: ",
-      allRealStatesData && allRealStatesData.length
+      allRealStatesData && allRealStatesData.length // Add null check here if needed
     );
   });
 
   useEffect(() => {
-    console.log("DATA_LENGTH: ", items.length);
+    console.log("DATA_LENGTH: ", items && items.length); // Add null check here
   }, [items]);
   // TODO: add current location position
 
