@@ -51,7 +51,7 @@ function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
             {item.realEstate?.properties[0].location.macrozone}
           </span>
         </p>
-        <p className="price">$ {item?.realEstate?.price?.formattedValue}</p>
+        <p className="price">{item?.realEstate?.price?.formattedValue}</p>
         <div className="bottom">
           <div className="features">
             <div className="feature">

@@ -122,6 +122,14 @@ function Filter({
     fetchMacroArea();
   }, [filterOptions.cityId]);
 
+  // add orderBy poaams to filterOptions
+  const handleOrderBySelection = (selected) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      orderBy: selected.target.value,
+    }));
+  };
+
   return (
     <div className="filter">
       <h1>
@@ -212,6 +220,22 @@ function Filter({
                 </select>
               </>
             )}
+
+            <label htmlFor="orderBy">OrderBy</label>
+            <select
+              name="orderBy"
+              id="orderBy"
+              value={filterOptions.orderBy}
+              onChange={handleOrderBySelection}
+            >
+              <option value="Consigliati">Consigliati</option>
+              <option value="Prezzo up">Prezzo up</option>
+              <option value="Prezzo down">Prezzo down</option>
+              <option value="Metri quadri up">Metri quadri up</option>
+              <option value="Metri quadri down">Metri quadri down</option>
+              <option value="Più recente">Più recente</option>
+              <option value="Meno recente">Meno recente</option>
+            </select>
           </div>
         </div>
         <div className="bottom">

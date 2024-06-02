@@ -37,6 +37,7 @@ function ListPage() {
   };
 
   const [filterOptions, setFilterOptions] = useState({
+    orderBy: "Consigliati",
     city: "", // locazione
     cityId: -1,
     type: "", // affitto, vendita, asta
