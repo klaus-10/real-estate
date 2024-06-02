@@ -1,6 +1,6 @@
 import { FilterOptions } from "interfaces/request/boundingBox";
 
-const isValidValue = (value: any): boolean => {
+export const isValidValue = (value: any): boolean => {
   return value !== undefined && value !== null && value !== "";
 };
 

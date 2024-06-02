@@ -23,6 +23,7 @@ export interface FilterOptions {
     from: number;
     to: number;
   };
+  orderBy: string;
 }
 
 export interface BoundingBoxRequest {
