@@ -54,7 +54,7 @@ const DisplayPOI = ({ poi, poiIconAnimation }) => {
                  point.realEstate?.properties[0]?.bathrooms
                } bathrooms</span>
                <span>${point.realEstate?.properties[0]?.rooms} rooms</span>
-               <b>$ ${point?.realEstate?.price?.formattedValue}</b>
+               <b>${point?.realEstate?.price?.formattedValue}</b>
              </div>
            </div>`
         );

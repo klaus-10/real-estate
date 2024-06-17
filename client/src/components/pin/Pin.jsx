@@ -55,7 +55,7 @@ function Pin({ item, poiIconAnimation }) {
                   {item.realEstate?.properties[0]?.bathrooms} bathrooms
                 </span>
                 <span>{item.realEstate?.properties[0]?.rooms} rooms</span>
-                <b>$ {item?.realEstate?.price?.formattedValue}</b>
+                <b>{item?.realEstate?.price?.formattedValue}</b>
               </div>
             </div>
           </Popup>

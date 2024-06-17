@@ -28,3 +28,5 @@ real-estate
 venv
 ./src/lib/docker/real-estate-env
 .src/lib/immobiliare/real-estate
+
+immobiliare-env
