@@ -9,6 +9,7 @@ function Filter({
   handleSearchIcon,
   filterOptions,
   setFilterOptions,
+  setComuneInfo,
 }) {
   // Function to handle changes in filter options
   const handleFilterChange = (e) => {
@@ -213,7 +214,7 @@ function Filter({
               <ul className="autocomplete">
                 {citySuggestions.map((location) => (
                   <li
-                    key={location.id}
+                    key={location.id + "wq"}
                     onClick={() => {
                       handleCitySelection(location.name);
                       handleCityIdSelection(location._id);
