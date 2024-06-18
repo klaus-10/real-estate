@@ -20,31 +20,3 @@
   border-radius: 6px;
   z-index: 100000;
 }
-
-.comune-info-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.comune-info {
-  width: 500px;
-  border: solid 1px gray;
-  border-radius: 6px;
-  padding: 10px;
-  background: #fff;
-  z-index: 1000000000;
-  position: fixed;
-  top: 150px;
-  right: 30px;
-  height: 200px;
-  overflow: scroll;
-}
-
-.comune-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  align-items: center;
-}

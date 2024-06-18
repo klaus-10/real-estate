@@ -1,0 +1,32 @@
+.comune-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 1000000000;
+  position: fixed;
+  bottom: 35px;
+  right: 25px;
+  cursor: pointer;
+}
+
+.comune-info {
+  width: 500px;
+  border: solid 1px gray;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fff;
+  z-index: 1000000000;
+  position: absolute;
+  bottom: 50px;
+  right: 25px;
+  height: 200px;
+  overflow: scroll;
+}
+
+.comune-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  align-items: center;
+}

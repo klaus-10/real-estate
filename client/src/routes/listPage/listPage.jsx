@@ -13,6 +13,7 @@ import {
 import { scrollToToTopWithElemRef } from "../../utils/utils";
 import "./listPage.scss";
 import Map from "../../components/map/Map";
+import ComuneInfo from "../../components/info_prezzo_comune/ComuneInfo";
 // import { useSearchParams } from "react-router-dom";
 
 function ListPage() {
@@ -25,7 +26,7 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
   const [currentCityDisplayed, setCurrentCityDisplayed] = useState(null);
-  const [comuneInfo, setComuneInfo] = useState({ ok: "ok" });
+  const [comuneInfo, setComuneInfo] = useState("");
 
   // poi icon animation on mouseOver
   const [poiIconAnimation, setPoiIconAnimation] = useState({});
@@ -248,7 +249,7 @@ function ListPage() {
   };
 
   // todo: add api call to show all realEstates points of the current view to see on the map as circle point
-
+  console.log("comuneInfo: ", comuneInfo);
   return (
     <div className="listPage">
       <div className="listContainer">
@@ -266,6 +267,7 @@ function ListPage() {
             handleSetTotalPages={handleSetTotalPages}
             filterOptions={filterOptions}
             setFilterOptions={setFilterOptions}
+            setComuneInfo={setComuneInfo}
           />
           <div className="list">
             {data &&
@@ -299,6 +301,7 @@ function ListPage() {
           comuneInfo={comuneInfo}
         />
       </div>
+      {filterOptions.city && <ComuneInfo comune={filterOptions.city} />}
     </div>
   );
 }

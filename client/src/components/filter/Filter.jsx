@@ -62,6 +62,7 @@ function Filter({
     handleSetData(data?.data);
     handleSetTotalPages(data?.total);
     setCitySuggestions([]);
+    setComuneInfo(filterOptions.city);
   };
 
   // handle city suggestion
@@ -99,6 +100,7 @@ function Filter({
     }));
     setCityTemp(comune);
     setIsAutocomplete(false);
+    setComuneInfo(comune);
   };
 
   const handleMacroareaSelection = (label) => {
