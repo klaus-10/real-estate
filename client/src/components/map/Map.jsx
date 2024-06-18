@@ -9,6 +9,7 @@ import SearchInMap from "./map-components/SearchInMap";
 import PinCircle from "../pin/PinCircle";
 import DisplayPOI from "../pin/DisplayPoi";
 import CenterMap from "./map-components/CenterMap";
+import ComuneInfo from "./map-components/ComuneInfo";
 
 function Map({
   items,
@@ -21,6 +22,7 @@ function Map({
   poiIconAnimation,
   currentCityDisplayed,
   filterOptions,
+  comuneInfo,
 }) {
   // center position on text label change
   const [center, setCenter] = useState([45.5188, 9.214]);
@@ -122,6 +124,10 @@ function Map({
         coordinates && (
           <Polygon pathOptions={purpleOptions} positions={coordinates} />
         )}
+
+      {comuneInfo && <ComuneInfo data={comuneInfo} />}
+
+      <ComuneInfo />
 
       {center && <CenterMap center={center} />}
     </MapContainer>

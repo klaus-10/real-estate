@@ -25,6 +25,7 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchIcon, setSearchIcon] = useState(false);
   const [currentCityDisplayed, setCurrentCityDisplayed] = useState(null);
+  const [comuneInfo, setComuneInfo] = useState({ ok: "ok" });
 
   // poi icon animation on mouseOver
   const [poiIconAnimation, setPoiIconAnimation] = useState({});
@@ -295,6 +296,7 @@ function ListPage() {
           poiIconAnimation={poiIconAnimation}
           currentCityDisplayed={currentCityDisplayed}
           filterOptions={filterOptions}
+          comuneInfo={comuneInfo}
         />
       </div>
     </div>

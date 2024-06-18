@@ -52,6 +52,26 @@ function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
           </span>
         </p>
         <p className="price">{item?.realEstate?.price?.formattedValue}</p>
+
+        {/* <div className="bottom">
+          <div className="features">
+            <div className="feature">
+              <img src="/bed.png" alt="" />
+              <span>
+                {item.realEstate?.properties[0]?.bedRoomsNumber} bedroom
+              </span>
+            </div>
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>{item.realEstate?.properties[0]?.bathrooms} bathroom</span>
+            </div>
+            <div className="feature">
+              <img src="/bath.png" alt="" />
+              <span>{item.realEstate?.properties[0]?.rooms} rooms</span>
+            </div>
+          </div>
+        </div> */}
+
         <div className="bottom">
           <div className="features">
             <div className="feature">
@@ -92,9 +112,9 @@ function Card({ item, poiIconAnimation, handlePoiMouseOver }) {
             <div className="icon">
               <img src="/save.png" alt="" />
             </div>
-            <div className="icon">
+            {/* <div className="icon">
               <img src="/chat.png" alt="" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
