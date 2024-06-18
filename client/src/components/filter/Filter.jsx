@@ -49,8 +49,6 @@ function Filter({
         [name]: name === "rooms" ? value + "" : value,
       }));
     }
-
-    console.log("filterOptions: ", filterOptions);
   };
 
   // Function to handle form submission
@@ -136,7 +134,6 @@ function Filter({
     const fetchMacroArea = async () => {
       if (filterOptions.city === "") return;
       const response = await getMacroAreaAPI(filterOptions.city);
-      console.log("macroarea: ", response);
       setMacroArea(response);
     };
 
@@ -154,9 +151,6 @@ function Filter({
       orderBy: selected.target.value,
     }));
   };
-
-  console.log("macroAreaSelected: ", macroAreaSelected);
-  console.log("filterOptions: ", filterOptions);
 
   return (
     <div className="filter">

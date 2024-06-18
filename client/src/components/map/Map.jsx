@@ -30,31 +30,14 @@ function Map({
   const handleBoundingBoxChange = (newBoundingBox) => {
     setBoundingBox(newBoundingBox);
   };
-  // Inside the Map component
-  useEffect(() => {
-    console.log(
-      "real-estate base: ",
-      items && items.length, // Add null check here
-      " real-estate total: ",
-      allRealStatesData && allRealStatesData.length // Add null check here if needed
-    );
-  });
-
-  useEffect(() => {
-    console.log("DATA_LENGTH: ", items && items.length); // Add null check here
-  }, [items]);
-  // TODO: add current location position
 
   const purpleOptions = { color: "purple" };
-  console.log("current_city_map: ", currentCityDisplayed);
 
   useEffect(() => {
     const tmpCoordinates = currentCityDisplayed?.geojson?.coordinates[0].map(
       (coord) => [coord[1], coord[0]]
     );
     setCoordinates(tmpCoordinates);
-    console.log("coordinates: ", tmpCoordinates);
-
     // change center of the map
     let lat = parseFloat(currentCityDisplayed?.lat);
     let lon = parseFloat(currentCityDisplayed?.lon);
@@ -67,11 +50,6 @@ function Map({
 
     // todo add navigate animation to react-leaflet map
   }, [currentCityDisplayed]);
-
-  // console.log("New center: ", [
-  //   parseFloat(currentCityDisplayed.lat),
-  //   parseFloat(currentCityDisplayed.lon),
-  // ]);
 
   return (
     <MapContainer

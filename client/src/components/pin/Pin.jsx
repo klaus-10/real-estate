@@ -3,17 +3,6 @@ import "./pin.scss";
 import { Link } from "react-router-dom";
 
 function Pin({ item, poiIconAnimation }) {
-  console.log(
-    "poiIconAnimation: ",
-    poiIconAnimation,
-    " - ",
-    item._id,
-    " - ",
-    poiIconAnimation.index === item._id
-  );
-
-  console.log(poiIconAnimation.state === "active" ? "animate" : "");
-
   return (
     <>
       {item?.realEstate?.loc && (

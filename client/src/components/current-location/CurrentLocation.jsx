@@ -16,7 +16,6 @@ const CurrentLocation = ({ setLocation }) => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // console.log("first_position", position);
           const { latitude, longitude } = position.coords;
 
           setLocation({ latitude, longitude });

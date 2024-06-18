@@ -73,10 +73,6 @@ function ListPage() {
   // leaflet bounding box coordinates
   const [boundingBox, setBoundingBox] = useState(null);
 
-  useEffect(() => {
-    console.log("data: ", data);
-  });
-
   const handleSetData = (newData) => {
     setData(newData);
   };
@@ -87,7 +83,6 @@ function ListPage() {
 
   const handleSetPageNumber = (pageNumber) => {
     setPage(pageNumber);
-    console.log("pageNum: ", pageNumber);
   };
 
   const handleSearchIcon = (searchIconStatus) => {
@@ -99,19 +94,9 @@ function ListPage() {
   };
 
   const handleSetAllRealStatesData = (newAllData) => {
-    console.log("newAllData: ", newAllData);
     setAllRealStatesData([]);
     setAllRealStatesData(newAllData);
   };
-
-  useEffect(() => {
-    console.log("data: ", data);
-
-    console.log("isMapSearch: ", isMapSearch);
-    console.log("searchIcon: ", searchIcon);
-    console.log("page: ", page);
-    console.log("totalPages: ", totalPages);
-  }, [searchIcon]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,7 +120,6 @@ function ListPage() {
   useEffect(() => {
     const getCityBoundaryBox = async () => {
       const response = await getComuneByIdAPI(filterOptions.cityId);
-      console.log("city_response: ", response);
       setCurrentCityDisplayed(response);
     };
 
@@ -161,14 +145,10 @@ function ListPage() {
         boundingBox?.south,
         filterOptions
       );
-      console.log("ok");
-
       handleSetAllRealStatesData(repsonse?.data);
-      // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
     const fetchDataFromMap = async () => {
       await fetchRealEstateDataByBoundaryBox();
-      // scrollToElemRef(wrapperRef); // Scroll to the wrapper element();
     };
 
     if (isMapSearch) {
@@ -180,7 +160,6 @@ function ListPage() {
   const fetchRealEstateDataByName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");
-      console.log("page: ", page);
       const repsonse = await getRealEstateDataByLocationNameAPI(
         filterOptions.city,
         page,
@@ -190,7 +169,6 @@ function ListPage() {
         null,
         filterOptions
       );
-      console.log("repsonse-fetchRealEstateDataByName: ", repsonse);
       handleSetData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
@@ -202,7 +180,6 @@ function ListPage() {
 
   const fetchRealEstateDataByBoundaryBox = async () => {
     try {
-      console.log("BoundaryBox Data");
       const repsonse = await getRealEstatesFromBoundingBoxListAPI(
         page,
         boundingBox?.west,
@@ -211,7 +188,6 @@ function ListPage() {
         boundingBox?.south,
         filterOptions
       );
-      console.log("repsonse: ", repsonse);
       handleSetData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
       scrollToToTopWithElemRef(wrapperRef);
@@ -224,7 +200,6 @@ function ListPage() {
   const fetchAllRealEstateLocationDataByLocationName = async () => {
     try {
       if (filterOptions.city === "") throw new Error("Please insert a city");
-      console.log("BoundaryBox Data");
       // TODO: handle isMapSearch or isSearchIcon
       const repsonse = await getAllRealEstatesLocationByLocationNameListAPI(
         filterOptions.city,
@@ -234,10 +209,6 @@ function ListPage() {
         null,
         null,
         filterOptions
-      );
-      console.log(
-        "repsonse getAllRealEstatesLocationByLocationNameListAPI: ",
-        repsonse
       );
       handleSetAllRealStatesData(repsonse?.data);
       handleSetTotalPages(repsonse?.totalPages);
@@ -249,17 +220,10 @@ function ListPage() {
   };
 
   // todo: add api call to show all realEstates points of the current view to see on the map as circle point
-  console.log("comuneInfo: ", comuneInfo);
   return (
     <div className="listPage">
       <div className="listContainer">
-        <div
-          className="wrapper"
-          ref={wrapperRef}
-          // onScroll={(event) =>
-          //   console.log("scrolled: ", event.target.scrollTop)
-          // }
-        >
+        <div className="wrapper" ref={wrapperRef}>
           <Filter
             handleSearchIcon={handleSearchIcon}
             handleSetData={handleSetData}
