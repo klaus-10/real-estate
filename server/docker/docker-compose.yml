@@ -1,11 +1,26 @@
 #version: '3.8'  # Specify Docker Compose version (adjust if needed)
 
+# services:
+#   mongo:
+#     image: mongo
+#     restart: always
+#     ports:
+#       - 27017:27017
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: root
+#       MONGO_INITDB_ROOT_PASSWORD: password
+
+version: "3"
+
 services:
-  mongo:
-    image: mongo
-    restart: always
+  nodejs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 27017:27017
+      - "3001:3000" # Map host port 3001 to container port 3000
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      NODE_ENV: production # Set your desired Node environment
+    volumes:
+      - .:/usr/src/app # Mount local directory to container directory
+    command: npm start # Adjust startup command as per your application
